@@ -1,25 +1,25 @@
 import { string, z } from "zod";
 
 export const SignupInput = z.object({
-  username: string().min(3).max(10),
-  email: string().min(8).max(20),
-  password: string().min(5).max(10),
+  username: string().min(3).max(10).default(""),
+  email: string().email().min(8).max(25).default(""),
+  password: string().min(5).max(10).default(""),
 });
 
 export type SignupInputType = z.infer<typeof SignupInput>;
 
 export const LoginInput = z.object({
-  email: string().min(8).max(20),
-  password: string().min(5).max(10),
+  email: string().min(8).max(25).default(""),
+  password: string().min(5).max(10).default(""),
 });
 
 export type LoginInputType = z.infer<typeof LoginInput>;
 
 export const CourseInput = z.object({
-  title: string(),
-  description: string(),
-  price: z.number(),
-  imageLink: string(),
+  title: string().min(8).max(20).default(""),
+  description: string().min(10).max(30).default(""),
+  price: z.number().min(3).max(10).default(0),
+  imageLink: string().default(""),
   published: z.boolean().default(false),
 });
 

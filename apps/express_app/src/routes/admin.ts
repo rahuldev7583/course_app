@@ -1,14 +1,35 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import * as bcryptjs from "bcryptjs";
 import { LoginInput, SignupInput } from "common";
 import { PrismaClient } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
+import fetchAdmin from "./../../middleware/admin";
+
+interface Admin {
+  adminId: number;
+}
+interface CustomRequest extends Request {
+  admin?: Admin;
+}
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
 router.get("/", (req, res) => {
   res.send("Signup or Login as admin");
+});
+
+router.get("/me", fetchAdmin, async (req: CustomRequest, res: Response) => {
+  const admin = req.admin;
+  if (!admin) {
+    res.status(403).json({ message: "Error occured" });
+  } else {
+    const adminData = await prisma.admin.findUnique({
+      where: { id: admin.adminId },
+    });
+    console.log(adminData);
+    res.json({ adminData });
+  }
 });
 
 router.post("/signup", async (req, res) => {

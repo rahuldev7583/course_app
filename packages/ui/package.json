@@ -7,8 +7,11 @@
   ],
   "exports": {
     "./styles.css": "./dist/index.css",
-    "./card": "./src/card.tsx",
-    "./header": "./src/header.tsx"
+    "./home": "./src/home.tsx",
+    "./header": "./src/header.tsx",
+    "./signup": "./src/signup.tsx",
+    "./login": "./src/login.tsx",
+    "./addCourse": "./src/addCourse.tsx"
   },
   "scripts": {
     "build": "tailwindcss -i ./src/styles.css -o dist/index.css",
@@ -27,7 +30,11 @@
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.33",
     "react": "^18.2.0",
+    "store": "workspace:*",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "recoil": "^0.7.7"
   }
 }

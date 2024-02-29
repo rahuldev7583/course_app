@@ -15,10 +15,12 @@
   "dependencies": {
     "@prisma/client": "5.9.1",
     "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.5",
     "bcryptjs": "^2.4.3",
     "common": "*",
+    "cors": "^2.8.5",
     "dotenv": "^16.3.2",
     "express": "^4.18.2",
     "express-jwt": "^8.4.1",
