@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@repo/ui"],
   env: {
-    API_URL: "http://localhost:5000/admin",
+    API_URL: process.env.API_URL,
   },
 };
 

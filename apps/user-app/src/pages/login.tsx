@@ -42,7 +42,7 @@ export default function LoginAdmin() {
 
           Cookies.set("token", data.token);
 
-          router.push("admin");
+          router.push("user");
         } else {
           console.log("Unexpected response status:", response.status);
           setLoginStatus(false);
@@ -62,7 +62,7 @@ export default function LoginAdmin() {
     <div>
       <Login
         loginStatus={loginStatus}
-        type="Login as Admin"
+        type="Login"
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         email={loginState.email}

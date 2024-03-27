@@ -20,13 +20,26 @@ router.get("/", (req, res) => {
 });
 
 router.get("/me", fetchAdmin, async (req: CustomRequest, res: Response) => {
-  const admin = req.admin;
+  const admin = req.session.admin;
   if (!admin) {
     res.status(403).json({ message: "Error occured" });
   } else {
-    const adminData = await prisma.admin.findUnique({
+    const data = await prisma.admin.findUnique({
       where: { id: admin.adminId },
+      select: {
+        name: true,
+        email: true,
+        course: true,
+        isVerified: false,
+        password: false,
+      },
     });
+    const adminData = {
+      ...data,
+      courses: data?.course.length,
+      publishedCourses: data?.course.filter((c) => c.published).length,
+    };
+    delete adminData.course;
     console.log(adminData);
     res.json({ adminData });
   }
@@ -70,7 +83,9 @@ router.post("/signup", async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
       } else {
         const token = jwt.sign(payload, secretKey, { expiresIn: "2h" });
-        console.log(createdAdmin);
+        // console.log(createdAdmin);
+
+        // console.log(token);
         res.json({ message: "Successfully SignedUp as Admin", token });
       }
     } catch (error) {
@@ -112,12 +127,29 @@ router.post("/login", async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
       } else {
         const token = jwt.sign(payload, secretKey, { expiresIn: "2h" });
+        req.session.token = token;
         res.json({ message: "Successfully LoggedIn as Admin", token });
       }
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
+  }
+});
+
+router.post("/logout", (req, res) => {
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        res.status(500).send("Error");
+      } else {
+        res.clearCookie("token"); // Clear the token cookie
+        res.sendStatus(200); // Send success response
+      }
+    });
+  } else {
+    res.sendStatus(200); // No session, already logged out
   }
 });
 

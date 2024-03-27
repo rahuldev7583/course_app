@@ -16,9 +16,9 @@ export const LoginInput = z.object({
 export type LoginInputType = z.infer<typeof LoginInput>;
 
 export const CourseInput = z.object({
-  title: string().min(8).max(20).default(""),
-  description: string().min(10).max(30).default(""),
-  price: z.number().min(3).max(10).default(0),
+  title: string().min(4).max(25).default(""),
+  description: string().min(5).max(40).default(""),
+  price: z.number().min(10).max(100000).default(0),
   imageLink: string().default(""),
   published: z.boolean().default(false),
 });

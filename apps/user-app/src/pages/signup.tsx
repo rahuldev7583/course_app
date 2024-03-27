@@ -6,7 +6,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 
-export default function SignupAdmin() {
+export default function SignupUser() {
   const router = useRouter();
   const API_URL = process.env.API_URL;
 
@@ -36,7 +36,7 @@ export default function SignupAdmin() {
 
       Cookies.set("token", data.token);
 
-      router.push("admin");
+      router.push("user");
     } else {
       console.error("Validation errors:");
     }
@@ -45,7 +45,7 @@ export default function SignupAdmin() {
   return (
     <div>
       <Signup
-        type="Signup as Admin"
+        type="Signup"
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         username={signupState.username}

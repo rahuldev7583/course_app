@@ -15,11 +15,7 @@ export const Signup = (props: {
 
       <h1 className="mt-16 text-xl font-medium text-center">{props.type}</h1>
       <form
-        className={
-          // signup.signupStatus?
-          // `mt-20 mb-4 w-[75%] md:w-[25%] text-base md:text-lg ml-16 md:ml-[41%]` :
-          `mt-4 ml-16 w-[75%] md:w-[25%] text-base md:text-lg md:ml-[41%]`
-        }
+        className={`mt-4 ml-16 w-[75%] md:w-[25%] text-base md:text-lg md:ml-[41%]`}
         onSubmit={props.handleSubmit}
       >
         <label htmlFor="name" className="">
@@ -64,18 +60,20 @@ export const Signup = (props: {
           required
         />
         <br />
-        <button
-          type="submit"
-          className="  pt-2 pb-2 pl-4 pr-4  bg-[#363960] text-gray-100 ml-16 mt-6 px-6 md:px-6 py-2 md:py-3 text-xl md:text-2xl font-medium rounded-2xl md:mt-20 md:ml-56 hover:bg-gray-300  hover:text-[#363960]"
-        >
-          submit
-        </button>
-        <button
-          className="pt-2 pb-2 bg-[#363960] text-gray-100 ml-16 mt-6 pl-6 pr-6 md:px-6 py-2 md:py-3 text-xl md:text-2xl font-medium rounded-2xl md:mt-20 md:ml-56 hover:bg-gray-300  hover:text-[#363960]"
-          onClick={props.loginPath}
-        >
-          Login
-        </button>
+        <div className="flex">
+          <button
+            type="submit"
+            className="  pt-2 pb-2 pl-4 pr-4  bg-[#363960] text-gray-100 ml-2 mt-6 px-6 md:px-6 py-2 md:py-3 text-xl md:text-2xl font-medium rounded-2xl md:mt-20 md:ml-4 hover:bg-gray-300  hover:text-[#363960]"
+          >
+            Signup
+          </button>
+          <button
+            onClick={props.loginPath}
+            className="  pt-2 pb-2 pl-6 pr-6  bg-[#363960] text-gray-100 ml-10 mt-6 px-6 md:px-6 py-2 md:py-3 text-xl md:text-2xl font-medium rounded-2xl md:mt-20 md:ml-24 hover:bg-gray-300  hover:text-[#363960]"
+          >
+            Login
+          </button>
+        </div>
       </form>
     </div>
   );

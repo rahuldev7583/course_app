@@ -17,17 +17,24 @@ router.get(
   "/courses",
   fetchAdmin,
   async (req: CustomRequest, res: Response) => {
-    const admin = req.admin;
+    const admin = req.session.admin;
+    // console.log(admin);
+
     if (!admin) {
-      res.status(403).json({ message: "Error occured" });
+      res.status(403).json({ message: "Unauthorized" });
     } else {
-      const courses = await prisma.course.findMany({
-        where: {
-          adminId: admin.adminId,
-        },
-      });
-      console.log(courses);
-      res.json({ courses });
+      try {
+        const courses = await prisma.course.findMany({
+          where: {
+            adminId: admin.adminId,
+          },
+        });
+        // console.log(courses);
+        res.json({ courses });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+      }
     }
   }
 );
@@ -41,7 +48,7 @@ router.post(
       res.status(403).json({ message: "Error occured" });
     } else {
       const course = parsedInput.data;
-      const admin = req.admin;
+      const admin = req.session.admin;
 
       try {
         if (!admin) {
@@ -53,10 +60,11 @@ router.post(
               description: course.description,
               price: course.price,
               imageLink: course.imageLink,
+              published: course.published,
               adminId: admin.adminId,
             },
           });
-          console.log(createdCourse);
+          // console.log(createdCourse);
           res.send("Course created");
         }
       } catch (error) {
@@ -104,6 +112,67 @@ router.put(
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
       }
+    }
+  }
+);
+
+router.put(
+  "/course/publish/:id",
+  fetchAdmin,
+  async (req: CustomRequest, res: Response) => {
+    try {
+      const { published } = req.body;
+      const courseId = parseInt(req.params.id, 10);
+      const course = await prisma.course.findUnique({
+        where: {
+          id: courseId,
+        },
+      });
+      if (!course) {
+        res.status(400).send("Course doesn't exit");
+      } else {
+        const updatedCourse = await prisma.course.update({
+          where: {
+            id: courseId,
+          },
+          data: {
+            published: published,
+          },
+        });
+        res.json({ message: "Course updated successfully", updatedCourse });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+router.delete(
+  "/course/:id",
+  fetchAdmin,
+  async (req: CustomRequest, res: Response) => {
+    try {
+      const courseId = parseInt(req.params.id, 10);
+      const course = await prisma.course.findUnique({
+        where: {
+          id: courseId,
+        },
+      });
+
+      if (!course) {
+        res.status(404).send("Course not found");
+      } else {
+        await prisma.course.delete({
+          where: {
+            id: courseId,
+          },
+        });
+        res.json({ message: "Course deleted successfully" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 );

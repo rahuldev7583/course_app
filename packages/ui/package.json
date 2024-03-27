@@ -11,7 +11,7 @@
     "./header": "./src/header.tsx",
     "./signup": "./src/signup.tsx",
     "./login": "./src/login.tsx",
-    "./addCourse": "./src/addCourse.tsx"
+    "./menu": "./src/menu.tsx"
   },
   "scripts": {
     "build": "tailwindcss -i ./src/styles.css -o dist/index.css",

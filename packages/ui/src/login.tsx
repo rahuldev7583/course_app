@@ -6,12 +6,19 @@ export const Login = (props: {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   email: string;
   password: string;
+  loginStatus: boolean;
 }) => {
   return (
     <div className="text-[#363960] font-sans">
       <Head />
 
       <h1 className="mt-16 text-xl font-medium text-center">{props.type}</h1>
+      {!props.loginStatus && (
+        <p className="ml-8 mt-2">
+          {" "}
+          ***Login with correct email and password***
+        </p>
+      )}
       <form
         className={
           // signup.signupStatus?

@@ -17,6 +17,7 @@ model Admin {
   password String
   isVerified Boolean @default(false)
   course Course[]
+
 }
 
 model Course {

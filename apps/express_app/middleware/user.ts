@@ -14,7 +14,8 @@ interface CustomRequest extends Request {
 }
 
 const fetchUser = (req: CustomRequest, res: Response, next: NextFunction) => {
-  const token = req.header("token");
+  // const token = req.header("token");
+  const token = req.cookies.token; // Assuming the token is stored in a cookie named "token"
   if (!token) {
     res.status(401).send({ error: "Authentication failed" });
   } else {

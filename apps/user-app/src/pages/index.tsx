@@ -2,22 +2,22 @@ import Image from "next/image";
 import code from "./../../public/coding.png";
 import { Landing } from "@repo/ui/home";
 import { Inter } from "next/font/google";
-import { Signup } from "@repo/ui/signup";
+import { useRouter } from "next/router";
 
 const inter = Inter({ subsets: ["latin"] });
-
 const content = {
   titleOne: " Welcome to CodeCraft!",
-  titleTwo: "Master Web Development with Ease!",
-  para: "Our instructors will guide you through practical, real world projects. Get ready to roll up your sleeves and dive into the code.",
+  titleTwo: "Learn Web Development with Ease!",
+  para: "Welcome to CodeCraft , where your creativity meets our cutting-edge platform to shape the future of web development education",
   paraTwo:
-    "In the fast-paced world of web development, staying current is crucial. Our instructors are at the forefront of the industry, continuously updating their skills to bring you the latest trends, tools, and technologies.",
+    "At CodeCraft , we empower you to bring your vision to life. From structuring course content to designing engaging learning materials, our platform provides you with the flexibility and freedom to craft courses that reflect your expertise and passion for web development.",
 };
 
 export default function Home() {
+  const router = useRouter();
   return (
     <main className={`  `}>
-      <div className="sm:w-[90%] md:w-[65%] mt-8 ml-6 md:ml-0 md:mt-0">
+      <div className="sm:w-[90%] md:w-[65%] mt-6 ml-6 md:ml-0 md:mt-0">
         <Image src={code} alt="code-icon" priority />
       </div>
       <Landing
@@ -26,7 +26,7 @@ export default function Home() {
         titleTwo={content.titleTwo}
         para={content.para}
         paraTwo={content.paraTwo}
-        getStart={() => console.log("start")}
+        getStart={() => router.push("signup")}
       />
     </main>
   );
