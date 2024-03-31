@@ -13,7 +13,7 @@ export const Menu = (props: {
   };
 }) => {
   return !props.menuStatus ? (
-    <div className="absolute right-0 ">
+    <div className="absolute right-0 top-4">
       <button
         className="sm:hidden text-gray-800 hover:text-gray-900 focus:outline-none "
         onClick={props.menuClicked}
@@ -64,7 +64,7 @@ export const Menu = (props: {
         X
       </button>
       <div className="mt-16 ml-6">
-        <p className="">Hello {props.profile.name}</p>
+        <p className=""> {"Hello " + props.profile.name}</p>
         <p className="">{props.profile.email}</p>
         {props.type === "admin" ? (
           <>

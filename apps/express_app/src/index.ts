@@ -13,6 +13,7 @@ declare module "express-session" {
   export interface SessionData {
     token?: string;
     admin: { adminId: number };
+    user: { userId: number };
   }
 }
 

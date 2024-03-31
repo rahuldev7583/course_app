@@ -13,9 +13,10 @@ interface CustomRequest extends Request {
 }
 
 router.get("/courses", fetchUser, async (req: CustomRequest, res: Response) => {
-  const user = req.user;
+  const user = req.session.user;
   try {
     if (!user) {
+      console.log(user);
       res.status(403).json({ message: "Error occured" });
     } else {
       const courses = await prisma.course.findMany({
@@ -46,8 +47,8 @@ router.post(
       if (!course) {
         res.status(400).send("Course doesn't exit");
       } else {
-        const userId = req.user?.userId;
-        const updatedUser = await prisma.user.update({
+        const userId = req.session.user?.userId;
+        const updateUser = await prisma.user.update({
           where: {
             id: userId,
           },
@@ -59,8 +60,17 @@ router.post(
             },
           },
         });
-
-        res.json({ message: "Course added to purchasedCourses", updatedUser });
+        const userData = await prisma.user.findUnique({
+          where: { id: userId },
+          select: {
+            name: true,
+            email: true,
+            purchasedCourses: true,
+            isVerified: false,
+            password: false,
+          },
+        });
+        res.json({ message: "Course added to purchasedCourses", userData });
       }
     } catch (error) {
       console.error(error);
@@ -74,7 +84,7 @@ router.get(
   fetchUser,
   async (req: CustomRequest, res: Response) => {
     try {
-      const userId = req.user?.userId;
+      const userId = req.session.user?.userId;
       const user = await prisma.user.findUnique({
         where: {
           id: userId,

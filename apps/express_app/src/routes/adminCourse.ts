@@ -18,8 +18,6 @@ router.get(
   fetchAdmin,
   async (req: CustomRequest, res: Response) => {
     const admin = req.session.admin;
-    // console.log(admin);
-
     if (!admin) {
       res.status(403).json({ message: "Unauthorized" });
     } else {
@@ -29,7 +27,6 @@ router.get(
             adminId: admin.adminId,
           },
         });
-        // console.log(courses);
         res.json({ courses });
       } catch (error) {
         console.error(error);
@@ -64,7 +61,6 @@ router.post(
               adminId: admin.adminId,
             },
           });
-          // console.log(createdCourse);
           res.send("Course created");
         }
       } catch (error) {

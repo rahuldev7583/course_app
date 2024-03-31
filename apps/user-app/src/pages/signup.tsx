@@ -25,17 +25,13 @@ export default function SignupUser() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(signupState);
     const validation = SignupInput.safeParse(signupState);
 
     if (validation.success) {
       const response = await axios.post(`${API_URL}/signup`, signupState);
       const data = response.data;
-      console.log(data);
-      console.log("Form is valid:", signupState);
-
+      // console.log("Form is valid:", signupState);
       Cookies.set("token", data.token);
-
       router.push("user");
     } else {
       console.error("Validation errors:");

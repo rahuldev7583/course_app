@@ -1,14 +1,45 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import * as bcryptjs from "bcryptjs";
 import { LoginInput, SignupInput } from "common";
 import { PrismaClient } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
+import fetchUser from "./../../middleware/user";
+
+interface User {
+  userId: number;
+}
+interface CustomRequest extends Request {
+  user?: User;
+}
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
 router.get("/", (req, res) => {
   res.send("Signup or Login as User");
+});
+
+router.get("/me", fetchUser, async (req: CustomRequest, res: Response) => {
+  const user = req.session.user;
+  if (!user) {
+    res.status(403).json({ message: "Error occured" });
+  } else {
+    const data = await prisma.user.findUnique({
+      where: { id: user.userId },
+      select: {
+        name: true,
+        email: true,
+        purchasedCourses: true,
+        isVerified: false,
+        password: false,
+      },
+    });
+    const userData = {
+      ...data,
+      purchasedCourses: data?.purchasedCourses.length,
+    };
+    res.json({ userData });
+  }
 });
 
 router.post("/signup", async (req, res) => {
@@ -49,7 +80,6 @@ router.post("/signup", async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
       } else {
         const token = jwt.sign(payload, secretKey, { expiresIn: "2h" });
-        console.log(createduser);
         res.json({ message: "Successfully SignedUp as user", token });
       }
     } catch (error) {
@@ -97,6 +127,23 @@ router.post("/login", async (req, res) => {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
+  }
+});
+
+
+router.post("/logout", (req, res) => {
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        res.status(500).send("Error");
+      } else {
+        res.clearCookie("token"); // Clear the token cookie
+        res.sendStatus(200); // Send success response
+      }
+    });
+  } else {
+    res.sendStatus(200); // No session, already logged out
   }
 });
 

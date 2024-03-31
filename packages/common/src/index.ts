@@ -1,7 +1,7 @@
 import { string, z } from "zod";
 
 export const SignupInput = z.object({
-  username: string().min(3).max(10).default(""),
+  username: string().min(3).max(20).default(""),
   email: string().email().min(8).max(25).default(""),
   password: string().min(5).max(10).default(""),
 });

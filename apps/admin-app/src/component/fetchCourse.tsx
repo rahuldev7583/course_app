@@ -28,40 +28,33 @@ export default function FetchCourses() {
       };
       const response = await axios.get(`${API_URL}/courses`, config);
       const data = response.data;
-      console.log(data);
       const courseLength = data.courses.length;
       if (courseLength > 0) {
         setCourse(data.courses);
-        console.log("course loaded");
         const updatedCourses = data.courses;
         const updatedPublishedCourses = updatedCourses.filter(
           (course) => course.published
         );
-        console.log(updatedPublishedCourses);
-
         const updatedAdminInfo = {
           ...adminInfo,
           courses: updatedCourses.length,
           publishedCourses: updatedPublishedCourses.length,
         };
         setAdminInfo(updatedAdminInfo);
-        setCourseStatus({ ...courseStatus, menu: true });
+        setCourseStatus({ ...courseStatus });
       } else {
         setCourse(data.courses);
-        console.log("course loaded");
         const updatedCourses = data.courses;
         const updatedPublishedCourses = updatedCourses.filter(
           (course) => course.published
         );
-        console.log(updatedPublishedCourses);
-
         const updatedAdminInfo = {
           ...adminInfo,
           courses: updatedCourses.length,
           publishedCourses: updatedPublishedCourses.length,
         };
         setAdminInfo(updatedAdminInfo);
-        setCourseStatus({ ...courseStatus, menu: true });
+        setCourseStatus({ ...courseStatus });
       }
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -78,23 +71,17 @@ export default function FetchCourses() {
       };
 
       const courseToUpdate = courses.find((c) => c.id === courseId);
-      console.log(courseToUpdate, "Course to publish");
-
       if (!courseToUpdate) {
         console.error(`Course with ID ${courseId} not found.`);
         return;
       }
-
       const updatePayload = { published: published };
       const response = await axios.put(
         `${API_URL}/course/publish/${courseId}`,
         updatePayload,
         config
       );
-
       const data = response.data;
-      console.log(data);
-
       setCourseStatus({
         ...courseStatus,
         showCourse: true,
@@ -119,14 +106,10 @@ export default function FetchCourses() {
         config
       );
       const data = response.data;
-      console.log(data);
-
       const updatedCourses = courses.filter((course) => course.id !== courseId);
       const updatedPublishedCourses = updatedCourses.filter(
         (course) => course.published
       );
-      console.log(updatedPublishedCourses);
-
       const updatedAdminInfo = {
         ...adminInfo,
         courses: updatedCourses.length,
@@ -176,7 +159,6 @@ export default function FetchCourses() {
                     publishCourse: !courseItem.published,
                   });
                   publishedCourseClick(courseItem.id, !courseItem.published);
-                  console.log("publishCourse clicked", courseStatus);
                 }}
               >
                 <span className="sr-only">Toggle</span>
@@ -195,7 +177,6 @@ export default function FetchCourses() {
                   showCourse: false,
                 });
                 deleteCourseClick(courseItem.id);
-                console.log("delete course");
               }}
             >
               Delete Course
@@ -210,8 +191,6 @@ export default function FetchCourses() {
                   updateCourse: true,
                   courseToUpdate: courseItem.id,
                 });
-
-                console.log("update course clicked");
               }}
             >
               Update Course

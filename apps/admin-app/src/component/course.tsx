@@ -1,12 +1,7 @@
 import Cookies from "js-cookie";
 import { CourseInput } from "common";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  adminInfoAtom,
-  courseInputAtom,
-  coursesAtom,
-  courseStatusAtom,
-} from "store";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { courseInputAtom, coursesAtom, courseStatusAtom } from "store";
 import axios from "axios";
 
 interface ExtendedCourseInput extends CourseInput {
@@ -15,13 +10,11 @@ interface ExtendedCourseInput extends CourseInput {
 
 export default function CourseForm() {
   const API_URL = process.env.API_URL;
-  const [course, setCourse] = useRecoilState(coursesAtom);
+  const course = useRecoilValue(coursesAtom);
   const courseInput = useRecoilValue(courseInputAtom);
   const setCourseInput = useSetRecoilState(courseInputAtom);
   const setCourseStatus = useSetRecoilState(courseStatusAtom);
   const courseStatus = useRecoilValue(courseStatusAtom);
-  const setAdminInfo = useSetRecoilState(adminInfoAtom);
-  const adminInfo = useRecoilValue(adminInfoAtom);
 
   const handleCourseChange = (e: any) => {
     const { name, value, type, checked } = e.target;
@@ -37,13 +30,9 @@ export default function CourseForm() {
       [name]: parsedValue,
     });
   };
-  console.log(course, courseInput, courseStatus);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(courseInput);
     const validation = CourseInput.safeParse(courseInput);
-    console.log(validation);
     if (validation.success) {
       const authToken = Cookies.get("token");
       const config = {
@@ -57,9 +46,14 @@ export default function CourseForm() {
         config
       );
       const data = response.data;
-      console.log(data);
-      console.log("Form is valid:", courseInput);
       setCourseStatus({ ...courseStatus, showCourse: true, showForm: false });
+      setCourseInput({
+        title: "",
+        description: "",
+        price: null,
+        published: false,
+        imageLink: "",
+      });
     } else {
       console.error("Validation errors:");
     }
@@ -67,8 +61,6 @@ export default function CourseForm() {
 
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("handle update clicked");
-
     updateCourseClick(courseStatus.courseToUpdate, courseInput);
   };
   const updateCourseClick = async (
@@ -76,32 +68,24 @@ export default function CourseForm() {
     updatedCourse: ExtendedCourseInput
   ) => {
     try {
-      // const authToken = localStorage.getItem("token");
       const authToken = Cookies.get("token");
       const config = {
         headers: {
           token: authToken,
         },
       };
-
       const courseToUpdate = course.find((c) => c.id === courseId);
-      console.log(courseToUpdate, "Course to update");
-
       if (!courseToUpdate) {
         console.error(`Course with ID ${courseId} not found.`);
         return;
       }
-
       const updatePayload = updatedCourse;
       const response = await axios.put(
         `${API_URL}/course/${courseId}`,
         updatePayload,
         config
       );
-
       const data = response.data;
-      console.log(data);
-
       setCourseStatus({
         ...courseStatus,
         updateCourse: false,
@@ -113,7 +97,6 @@ export default function CourseForm() {
       console.error("Error updating course:", error);
     }
   };
-
   return (
     <div>
       <form

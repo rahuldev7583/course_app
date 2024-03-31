@@ -25,23 +25,15 @@ export default function LoginAdmin() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(loginState);
     const validation = LoginInput.safeParse(loginState);
-
     if (validation.success) {
-      console.log(loginState, API_URL);
       try {
         const response = await axios.post(`${API_URL}/login`, loginState);
-        console.log(loginStatus);
-
         if (response.status === 200) {
           setLoginStatus(true);
           const data = response.data;
-          console.log(data);
-          console.log("Form is valid:", loginState);
-
+          // console.log("Form is valid:", loginState);
           Cookies.set("token", data.token);
-
           router.push("admin");
         } else {
           console.log("Unexpected response status:", response.status);

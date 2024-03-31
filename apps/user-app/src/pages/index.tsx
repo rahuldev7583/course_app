@@ -7,10 +7,10 @@ import { useRouter } from "next/router";
 const inter = Inter({ subsets: ["latin"] });
 const content = {
   titleOne: " Welcome to CodeCraft!",
-  titleTwo: "Learn Web Development with Ease!",
-  para: "Welcome to CodeCraft , where your creativity meets our cutting-edge platform to shape the future of web development education",
+  titleTwo: "Master Web Development with Ease!",
+  para: "Welcome to CodeCraft , Master the complete web development stack. From front-end technologies like HTML, CSS, and JavaScript to back-end frameworks like Node.js and Django, we've got it all covered.",
   paraTwo:
-    "At CodeCraft , we empower you to bring your vision to life. From structuring course content to designing engaging learning materials, our platform provides you with the flexibility and freedom to craft courses that reflect your expertise and passion for web development.",
+    "When you enroll at CodeCraft Pro, you're not just signing up for a course; you're joining a community driven by a passion for web development. Our instructors are not just educators; they are mentors, ready to guide you on a transformative journey.",
 };
 
 export default function Home() {

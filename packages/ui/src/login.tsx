@@ -14,7 +14,7 @@ export const Login = (props: {
 
       <h1 className="mt-16 text-xl font-medium text-center">{props.type}</h1>
       {!props.loginStatus && (
-        <p className="ml-8 mt-2">
+        <p className="ml-8 mt-2 md:text-lg md:ml-[41%] md:mt-6">
           {" "}
           ***Login with correct email and password***
         </p>

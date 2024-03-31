@@ -19,7 +19,6 @@ export const courseInputAtom = atom({
 export const courseStatusAtom = atom({
   key: "courseStatus",
   default: {
-    menu: false,
     showForm: false,
     showCourse: true,
     updateCourse: false,

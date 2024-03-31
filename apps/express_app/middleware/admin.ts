@@ -15,11 +15,9 @@ interface CustomRequest extends Request {
 
 const fetchAdmin = (req: CustomRequest, res: Response, next: NextFunction) => {
   const token = req.header("token");
-  // console.log(token);
-
+  
   if (!token) {
     console.log("error from middleware");
-
     res.status(401).send({ error: "Authentication failed" });
   } else {
     try {

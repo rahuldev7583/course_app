@@ -40,7 +40,6 @@ router.get("/me", fetchAdmin, async (req: CustomRequest, res: Response) => {
       publishedCourses: data?.course.filter((c) => c.published).length,
     };
     delete adminData.course;
-    console.log(adminData);
     res.json({ adminData });
   }
 });
@@ -83,9 +82,6 @@ router.post("/signup", async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
       } else {
         const token = jwt.sign(payload, secretKey, { expiresIn: "2h" });
-        // console.log(createdAdmin);
-
-        // console.log(token);
         res.json({ message: "Successfully SignedUp as Admin", token });
       }
     } catch (error) {
