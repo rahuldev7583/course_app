@@ -42,7 +42,7 @@ export default function CourseForm() {
       setCourseInput({
         title: "",
         description: "",
-        price: null,
+        price: 0,
         published: false,
         imageLink: "",
       });
