@@ -6,7 +6,6 @@ import logout from "./../component/logout";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
 import Course from "../component/course";
 
 interface UserInfo {
@@ -24,13 +23,9 @@ export default function User() {
 
   const getUserProfile = async () => {
     try {
-      const authToken = Cookies.get("token");
-      const config = {
-        headers: {
-          token: authToken,
-        },
-      };
-      const response = await axios.get(`${API_URL}/me`, config);
+      const response = await axios.get(`${API_URL}/me`, {
+        withCredentials: true,
+      });
       const data = response.data;
       const userData: UserInfo = data.userData;
       setUserInfo(userData);

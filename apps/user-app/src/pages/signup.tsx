@@ -31,7 +31,7 @@ export default function SignupUser() {
       const response = await axios.post(`${API_URL}/signup`, signupState);
       const data = response.data;
       // console.log("Form is valid:", signupState);
-      Cookies.set("token", data.token);
+      Cookies.set("userToken", data.userToken);
       router.push("user");
     } else {
       console.error("Validation errors:");

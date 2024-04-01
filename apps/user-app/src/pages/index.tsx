@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 const content = {
   titleOne: " Welcome to CodeCraft!",
   titleTwo: "Master Web Development with Ease!",
-  para: "Welcome to CodeCraft , Master the complete web development stack. From front-end technologies like HTML, CSS, and JavaScript to back-end frameworks like Node.js and Django, we've got it all covered.",
+  para: "Welcome to CodeCraft, Master the complete web development stack.From front-end technologies like HTML, CSS, and JavaScript to back-end frameworks like Node.js and Django, we've got it all covered.",
   paraTwo:
     "When you enroll at CodeCraft Pro, you're not just signing up for a course; you're joining a community driven by a passion for web development. Our instructors are not just educators; they are mentors, ready to guide you on a transformative journey.",
 };

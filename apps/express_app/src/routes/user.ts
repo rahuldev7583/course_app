@@ -2,8 +2,9 @@ import express, { Request, Response } from "express";
 import * as bcryptjs from "bcryptjs";
 import { LoginInput, SignupInput } from "common";
 import { PrismaClient } from "@prisma/client";
-import * as jwt from "jsonwebtoken";
+import * as jwt from "jsonwebToken";
 import fetchUser from "./../../middleware/user";
+import cookieParser from "cookie-parser";
 
 interface User {
   userId: number;
@@ -14,6 +15,7 @@ interface CustomRequest extends Request {
 
 const prisma = new PrismaClient();
 const router = express.Router();
+router.use(cookieParser());
 
 router.get("/", (req, res) => {
   res.send("Signup or Login as User");
@@ -79,8 +81,14 @@ router.post("/signup", async (req, res) => {
         console.error("SECRET_KEY is not defined.");
         res.status(500).json({ message: "Internal server error" });
       } else {
-        const token = jwt.sign(payload, secretKey, { expiresIn: "2h" });
-        res.json({ message: "Successfully SignedUp as user", token });
+        const userToken = jwt.sign(payload, secretKey, { expiresIn: "24h" });
+        // Create separate cookie for the userToken with SameSite=Strict
+        res.cookie("userToken", userToken, {
+          httpOnly: true, // Prevent client-side JavaScript access
+          secure: true, // Only send the cookie over HTTPS
+          sameSite: "strict",
+        });
+        res.json({ message: "Successfully SignedUp as user", userToken });
       }
     } catch (error) {
       console.error(error);
@@ -120,16 +128,22 @@ router.post("/login", async (req, res) => {
         console.error("SECRET_KEY is not defined.");
         res.status(500).json({ message: "Internal server error" });
       } else {
-        const token = jwt.sign(payload, secretKey, { expiresIn: "2h" });
-        res.json({ message: "Successfully LoggedIn as user", token });
+        const userToken = jwt.sign(payload, secretKey, { expiresIn: "24h" });
+        // Create separate cookie for the userToken with SameSite=Strict
+        res.cookie("userToken", userToken, {
+          httpOnly: true, // Prevent client-side JavaScript access
+          secure: true, // Only send the cookie over HTTPS
+          sameSite: "strict",
+        });
+        res.json({ message: "Successfully LoggedIn as user", userToken });
       }
     } catch (error) {
       console.error(error);
+      1;
       res.status(500).json({ message: "Internal server error" });
     }
   }
 });
-
 
 router.post("/logout", (req, res) => {
   if (req.session) {
@@ -138,7 +152,7 @@ router.post("/logout", (req, res) => {
         console.error("Error destroying session:", err);
         res.status(500).send("Error");
       } else {
-        res.clearCookie("token"); // Clear the token cookie
+        res.clearCookie("userToken"); // Clear the userToken cookie
         res.sendStatus(200); // Send success response
       }
     });

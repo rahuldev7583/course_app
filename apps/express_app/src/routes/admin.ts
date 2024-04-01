@@ -4,6 +4,7 @@ import { LoginInput, SignupInput } from "common";
 import { PrismaClient } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import fetchAdmin from "./../../middleware/admin";
+import cookieParser from "cookie-parser";
 
 interface Admin {
   adminId: number;
@@ -14,6 +15,7 @@ interface CustomRequest extends Request {
 
 const prisma = new PrismaClient();
 const router = express.Router();
+router.use(cookieParser());
 
 router.get("/", (req, res) => {
   res.send("Signup or Login as admin");
@@ -81,7 +83,13 @@ router.post("/signup", async (req, res) => {
         console.error("SECRET_KEY is not defined.");
         res.status(500).json({ message: "Internal server error" });
       } else {
-        const token = jwt.sign(payload, secretKey, { expiresIn: "2h" });
+        const token = jwt.sign(payload, secretKey, { expiresIn: "24h" });
+        // Create separate cookie for the token with SameSite=Strict
+        res.cookie("token", token, {
+          httpOnly: true, // Prevent client-side JavaScript access
+          secure: true, // Only send the cookie over HTTPS
+          sameSite: "strict",
+        });
         res.json({ message: "Successfully SignedUp as Admin", token });
       }
     } catch (error) {
@@ -122,8 +130,15 @@ router.post("/login", async (req, res) => {
         console.error("SECRET_KEY is not defined.");
         res.status(500).json({ message: "Internal server error" });
       } else {
-        const token = jwt.sign(payload, secretKey, { expiresIn: "2h" });
-        req.session.token = token;
+        const token = jwt.sign(payload, secretKey, { expiresIn: "24h" });
+
+        // Create separate cookie for the token with SameSite=Strict
+        res.cookie("token", token, {
+          httpOnly: true, // Prevent client-side JavaScript access
+          secure: true, // Only send the cookie over HTTPS
+          sameSite: "strict",
+        });
+
         res.json({ message: "Successfully LoggedIn as Admin", token });
       }
     } catch (error) {

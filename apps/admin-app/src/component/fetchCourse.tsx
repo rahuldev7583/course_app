@@ -20,13 +20,9 @@ export default function FetchCourses() {
 
   const fetchCourses = async () => {
     try {
-      const authToken = Cookies.get("token");
-      const config = {
-        headers: {
-          token: authToken,
-        },
-      };
-      const response = await axios.get(`${API_URL}/courses`, config);
+      const response = await axios.get(`${API_URL}/courses`, {
+        withCredentials: true,
+      });
       const data = response.data;
       const courseLength = data.courses.length;
       if (courseLength > 0) {
@@ -63,13 +59,6 @@ export default function FetchCourses() {
 
   const publishedCourseClick = async (courseId: number, published: boolean) => {
     try {
-      const authToken = Cookies.get("token");
-      const config = {
-        headers: {
-          token: authToken,
-        },
-      };
-
       const courseToUpdate = courses.find((c) => c.id === courseId);
       if (!courseToUpdate) {
         console.error(`Course with ID ${courseId} not found.`);
@@ -79,7 +68,9 @@ export default function FetchCourses() {
       const response = await axios.put(
         `${API_URL}/course/publish/${courseId}`,
         updatePayload,
-        config
+        {
+          withCredentials: true,
+        }
       );
       const data = response.data;
       setCourseStatus({
@@ -94,17 +85,9 @@ export default function FetchCourses() {
 
   const deleteCourseClick = async (courseId: number) => {
     try {
-      // const authToken = localStorage.getItem("token");
-      const authToken = Cookies.get("token");
-      const config = {
-        headers: {
-          token: authToken,
-        },
-      };
-      const response = await axios.delete(
-        `${API_URL}/course/${courseId}`,
-        config
-      );
+      const response = await axios.delete(`${API_URL}/course/${courseId}`, {
+        withCredentials: true,
+      });
       const data = response.data;
       const updatedCourses = courses.filter((course) => course.id !== courseId);
       const updatedPublishedCourses = updatedCourses.filter(

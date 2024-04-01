@@ -34,17 +34,9 @@ export default function CourseForm() {
     e.preventDefault();
     const validation = CourseInput.safeParse(courseInput);
     if (validation.success) {
-      const authToken = Cookies.get("token");
-      const config = {
-        headers: {
-          token: authToken,
-        },
-      };
-      const response = await axios.post(
-        `${API_URL}/course`,
-        courseInput,
-        config
-      );
+      const response = await axios.post(`${API_URL}/course`, courseInput, {
+        withCredentials: true,
+      });
       const data = response.data;
       setCourseStatus({ ...courseStatus, showCourse: true, showForm: false });
       setCourseInput({
@@ -68,12 +60,6 @@ export default function CourseForm() {
     updatedCourse: ExtendedCourseInput
   ) => {
     try {
-      const authToken = Cookies.get("token");
-      const config = {
-        headers: {
-          token: authToken,
-        },
-      };
       const courseToUpdate = course.find((c) => c.id === courseId);
       if (!courseToUpdate) {
         console.error(`Course with ID ${courseId} not found.`);
@@ -83,7 +69,7 @@ export default function CourseForm() {
       const response = await axios.put(
         `${API_URL}/course/${courseId}`,
         updatePayload,
-        config
+        { withCredentials: true }
       );
       const data = response.data;
       setCourseStatus({

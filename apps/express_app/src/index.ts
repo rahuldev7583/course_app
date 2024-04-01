@@ -6,29 +6,34 @@ import userCourseRoutes from "./routes/userCourse";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import session from "express-session";
+
 const app = express();
 const PORT = process.env.PORT || 8000;
-
+app.use(cookieParser()); // Required for parsing cookies
 declare module "express-session" {
   export interface SessionData {
     token?: string;
+    userToken?: string;
     admin: { adminId: number };
     user: { userId: number };
   }
 }
 
-app.use(cookieParser()); // Required for parsing cookies
-
 app.use(
   session({
     secret: "secretKey", // Replace with a secure random string
-    resave: false, // Don't save session if unmodified
+    resave: true, // Don't save session if unmodified
     saveUninitialized: true, // Create session when data is stored
-    cookie: { secure: true, httpOnly: true }, // Set secure and httpOnly flags for enhanced security
+    cookie: { secure: true, httpOnly: true, sameSite: "strict" }, // Set secure and httpOnly flags for enhanced security
+  })
+);
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    credentials: true,
   })
 );
 
-app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 app.get("/", (req, res) => {

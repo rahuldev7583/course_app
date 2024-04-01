@@ -32,17 +32,12 @@ export default function Course() {
 
   const fetchCourses = async () => {
     try {
-      const authToken = Cookies.get("token");
-      const config = {
-        headers: {
-          token: authToken,
-        },
-      };
-      const response = await axios.get(`${API_URL}/courses`, config);
-      const purchaseCourseRes = await axios.get(
-        `${API_URL}/purchasedcourses`,
-        config
-      );
+      const response = await axios.get(`${API_URL}/courses`, {
+        withCredentials: true,
+      });
+      const purchaseCourseRes = await axios.get(`${API_URL}/purchasedcourses`, {
+        withCredentials: true,
+      });
       const data = response.data;
       const purchaseCourseData = purchaseCourseRes.data.purchasedCourses;
       setCourse(data.courses);
@@ -56,17 +51,9 @@ export default function Course() {
   const purchaseCourseClick = async (courseId: number) => {
     setLoading(true);
     try {
-      const authToken = Cookies.get("token");
-      const config = {
-        headers: {
-          token: authToken,
-        },
-      };
-      const response = await axios.post(
-        `${API_URL}/course/${courseId}`,
-        null,
-        config
-      );
+      const response = await axios.post(`${API_URL}/course/${courseId}`, null, {
+        withCredentials: true,
+      });
       const data = response.data;
       const userData = data.userData;
       const updatedPurchaseCourse = userData.purchasedCourses;

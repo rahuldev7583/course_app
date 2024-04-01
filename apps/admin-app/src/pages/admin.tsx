@@ -29,13 +29,9 @@ export default function AdminHome() {
 
   const getAdminProfile = async () => {
     try {
-      const authToken = Cookies.get("token");
-      const config = {
-        headers: {
-          token: authToken,
-        },
-      };
-      const response = await axios.get(`${API_URL}/me`, config);
+      const response = await axios.get(`${API_URL}/me`, {
+        withCredentials: true,
+      });
       const data = response.data;
       const adminData: AdminInfo = data.adminData;
       setAdminInfo(adminData);
