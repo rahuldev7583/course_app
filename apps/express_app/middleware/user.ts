@@ -1,4 +1,4 @@
-import * as jwt from "jsonwebToken";
+import * as jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
 interface User {

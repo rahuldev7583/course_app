@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import * as bcryptjs from "bcryptjs";
 import { LoginInput, SignupInput } from "common";
 import { PrismaClient } from "@prisma/client";
-import * as jwt from "jsonwebToken";
+import * as jwt from "jsonwebtoken";
 import fetchUser from "./../../middleware/user";
 import cookieParser from "cookie-parser";
 
