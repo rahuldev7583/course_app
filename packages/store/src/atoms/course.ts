@@ -10,7 +10,7 @@ export const courseInputAtom = atom({
   default: {
     title: "",
     description: "",
-    price: null,
+    price: 0,
     published: false,
     imageLink: "",
   },
