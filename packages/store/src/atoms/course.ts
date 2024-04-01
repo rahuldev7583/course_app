@@ -22,7 +22,7 @@ export const courseStatusAtom = atom({
     showForm: false,
     showCourse: true,
     updateCourse: false,
-    courseToUpdate: null,
+    courseToUpdate: 0,
     publishCourse: false,
   },
 });

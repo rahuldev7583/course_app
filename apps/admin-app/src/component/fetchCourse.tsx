@@ -29,7 +29,7 @@ export default function FetchCourses() {
         setCourse(data.courses);
         const updatedCourses = data.courses;
         const updatedPublishedCourses = updatedCourses.filter(
-          (course) => course.published
+          (course: CourseInput) => course.published
         );
         const updatedAdminInfo = {
           ...adminInfo,
@@ -42,7 +42,7 @@ export default function FetchCourses() {
         setCourse(data.courses);
         const updatedCourses = data.courses;
         const updatedPublishedCourses = updatedCourses.filter(
-          (course) => course.published
+          (course: CourseInput) => course.published
         );
         const updatedAdminInfo = {
           ...adminInfo,
@@ -169,6 +169,7 @@ export default function FetchCourses() {
               className="mt-4 ml-12 md:ml-16 text-xl font-bold  text-[#eaebf7] bg-[#363960] px-3 py-2 rounded-xl hover:text-[#363960] hover:bg-gray-300"
               onClick={() => {
                 setCourseStatus({
+                  publishCourse: false,
                   showCourse: false,
                   showForm: true,
                   updateCourse: true,
