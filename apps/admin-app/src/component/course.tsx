@@ -56,7 +56,7 @@ export default function CourseForm() {
     updateCourseClick(courseStatus.courseToUpdate, courseInput);
   };
   const updateCourseClick = async (
-    courseId: number | null,
+    courseId: number,
     updatedCourse: CourseInput
   ) => {
     try {

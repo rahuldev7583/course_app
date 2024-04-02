@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./styles.css": "./dist/index.css",
     "./home": "./src/home.tsx",
     "./header": "./src/header.tsx",
     "./signup": "./src/signup.tsx",
@@ -19,14 +18,10 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/react": "^18.2.46",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.33",
     "react": "^18.2.0",
     "store": "workspace:*",
-    "tailwindcss": "^3.4.0",
     "typescript": "^5.3.3"
   },
   "dependencies": {

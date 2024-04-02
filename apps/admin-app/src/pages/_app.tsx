@@ -1,5 +1,4 @@
 import "./globals.css";
-import "@repo/ui/src/styles.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { RecoilRoot } from "recoil";
