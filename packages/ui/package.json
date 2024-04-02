@@ -2,11 +2,7 @@
   "name": "@repo/ui",
   "version": "0.0.0",
   "private": true,
-  "sideEffects": [
-    "**/*.css"
-  ],
   "exports": {
-    "./styles.css": "./dist/index.css",
     "./home": "./src/home.tsx",
     "./header": "./src/header.tsx",
     "./signup": "./src/signup.tsx",
@@ -14,9 +10,7 @@
     "./menu": "./src/menu.tsx"
   },
   "scripts": {
-    "build": "tailwindcss -i ./src/styles.css -o dist/index.css",
     "lint": "eslint src/",
-    "dev": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
     "type-check": "tsc --noEmit"
   },
   "peerDependencies": {
@@ -24,14 +18,10 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/react": "^18.2.46",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.33",
     "react": "^18.2.0",
     "store": "workspace:*",
-    "tailwindcss": "^3.4.0",
     "typescript": "^5.3.3"
   },
   "dependencies": {

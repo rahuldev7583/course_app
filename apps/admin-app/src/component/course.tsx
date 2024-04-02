@@ -10,7 +10,7 @@ interface ExtendedCourseInput extends CourseInput {
 
 export default function CourseForm() {
   const API_URL = process.env.API_URL;
-  const course = useRecoilValue(coursesAtom);
+  const course: ExtendedCourseInput[] = useRecoilValue(coursesAtom);
   const courseInput = useRecoilValue(courseInputAtom);
   const setCourseInput = useSetRecoilState(courseInputAtom);
   const setCourseStatus = useSetRecoilState(courseStatusAtom);
@@ -42,7 +42,7 @@ export default function CourseForm() {
       setCourseInput({
         title: "",
         description: "",
-        price: null,
+        price: 0,
         published: false,
         imageLink: "",
       });
@@ -57,7 +57,7 @@ export default function CourseForm() {
   };
   const updateCourseClick = async (
     courseId: number,
-    updatedCourse: ExtendedCourseInput
+    updatedCourse: CourseInput
   ) => {
     try {
       const courseToUpdate = course.find((c) => c.id === courseId);
@@ -77,7 +77,7 @@ export default function CourseForm() {
         updateCourse: false,
         showForm: false,
         showCourse: true,
-        courseToUpdate: null,
+        courseToUpdate: 0,
       });
     } catch (error) {
       console.error("Error updating course:", error);

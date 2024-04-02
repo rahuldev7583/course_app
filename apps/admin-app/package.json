@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:generate": "cd apps/express_app && npx prisma generate && cd ../.."
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
