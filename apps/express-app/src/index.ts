@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 5000;
 const sessionSecret = process.env.SESSION_SECRET;
 app.use(cookieParser()); // Required for parsing cookies
 declare module "express-session" {
