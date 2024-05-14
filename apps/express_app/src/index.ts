@@ -9,6 +9,7 @@ import session from "express-session";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
+const sessionSecret = process.env.SESSION_SECRET;
 app.use(cookieParser()); // Required for parsing cookies
 declare module "express-session" {
   export interface SessionData {
@@ -21,7 +22,7 @@ declare module "express-session" {
 
 app.use(
   session({
-    secret: "secretKey", // Replace with a secure random string
+    secret: sessionSecret ? sessionSecret : "", // Replace with a secure random string
     resave: true, // Don't save session if unmodified
     saveUninitialized: true, // Create session when data is stored
     cookie: { secure: true, httpOnly: true, sameSite: "strict" }, // Set secure and httpOnly flags for enhanced security

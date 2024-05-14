@@ -74,7 +74,7 @@ export default function Course() {
   }, []);
 
   return (
-    <div className="mt-8 md:mt-0 ml-12 pb-16 text-[#363960] md:grid md:grid-cols-4 md:w-[90%] z-0 relative">
+    <div className="mt-8 md:mt-10 ml-12 pb-16 text-[#363960] md:grid md:grid-cols-4 md:w-[90%] z-0 relative">
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -82,13 +82,13 @@ export default function Course() {
           return (
             <div
               key={courseItem.id}
-              className="mt-6 md:mt-3  w-[90%] border-4 border-[#363960]   rounded-2xl md:w-[41%] md:ml-12 pt-3 pb-5 pl-2 pr-2 md:pl-0 md:pr-0"
+              className="mt-6 md:mt-3  w-[90%] border-4 border-[#363960]   rounded-2xl md:w-[75%] md:ml-12 pt-3 pb-5 pl-2 pr-2 md:pl-0 md:pr-0"
             >
               <img
                 className=" w-[100%] rounded-xl md:w-[90%] md:ml-3 "
                 src={courseItem.imageLink}
               />
-              <h1 className="text-xl font-bold ml-4 mt-2 md:ml-8">
+              <h1 className="text-xl font-bold ml-4 mt-2 md:ml-4">
                 {courseItem.title}
               </h1>
               <p className="text-lg ml-4 font-medium">

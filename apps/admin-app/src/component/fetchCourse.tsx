@@ -114,14 +114,14 @@ export default function FetchCourses() {
       {courses.map((courseItem) => {
         return (
           <div
-            className="mt-6 md:mt-3  w-[90%] border-4 border-[#363960]   rounded-2xl md:w-[41%] md:ml-12 pt-3 pb-5 pl-2 pr-2 md:pl-0 md:pr-0"
+            className="mt-6 md:mt-3  w-[90%] border-4 border-[#363960]   rounded-2xl md:w-[75%]  md:ml-12 pt-3 pb-5 pl-2 pr-2 md:pl-0 md:pr-0"
             key={courseItem.id}
           >
             <img
               className=" w-[100%] rounded-xl md:w-[90%] md:ml-3 "
               src={courseItem.imageLink}
             />
-            <h1 className="text-xl font-bold ml-4 mt-2 md:ml-8">
+            <h1 className="text-xl font-bold ml-4 mt-2 md:ml-4">
               {courseItem.title}
             </h1>
             <p className="text-lg ml-4 font-medium">{courseItem.description}</p>
