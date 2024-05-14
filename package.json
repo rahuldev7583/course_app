@@ -9,7 +9,8 @@
     "prisma:generate": "cd apps/express_app && npx prisma generate && cd ../..",
     "prisma:migrate": "cd apps/express_app && npx prisma migrate deploy && cd ../..",
     "start-user-app": "cd ./apps/user-app && pnpm run start",
-    "start-admin-app": "cd ./apps/admin-app && pnpm run start"
+    "start-admin-app": "cd ./apps/admin-app && pnpm run start",
+    "start-express-app": "cd ./apps/express_app && pnpm run start"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
