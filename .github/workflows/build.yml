@@ -25,7 +25,25 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Generate prisma client
+        - name: Check for Prisma Changes
+        id: prisma_changes
+        run: |
+          if git diff --quiet HEAD^ HEAD ./prisma; then
+            echo "::set-output name=prisma_changed::false"
+          else
+            echo "::set-output name=prisma_changed::true"
+          fi
+
+      - name: Run Migrations
+        if: steps.prisma_changes.outputs.prisma_changed == 'true'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: pnpx prisma migrate deploy
+
+      - name: Generate Prisma client
+        if: steps.prisma_changes.outputs.prisma_changed == 'true'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: pnpm run prisma:generate
 
       - name: Run Build
