@@ -7,6 +7,7 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prisma:generate": "cd apps/express_app && npx prisma generate && cd ../..",
+    "prisma:migrate": "cd apps/express_app && npx prisma migrate deploy && cd ../..",
     "start-user-app": "cd ./apps/user-app && pnpm run start",
     "start-admin-app": "cd ./apps/admin-app && pnpm run start"
   },

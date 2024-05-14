@@ -38,7 +38,7 @@ jobs:
         if: steps.prisma_changes.outputs.prisma_changed == 'true'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: pnpx prisma migrate deploy
+        run: pnpm run prisma:migrate
 
       - name: Generate Prisma client
         if: steps.prisma_changes.outputs.prisma_changed == 'true'
