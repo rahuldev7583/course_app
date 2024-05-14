@@ -2,12 +2,15 @@ FROM node:20.12.0-alpine3.19
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+# Copy the root package.json and lock files for dependency resolution
+COPY package.json pnpm-lock.yaml ./
 
-COPY packages ./packages
-COPY apps/admin-app ./apps/admin-app
+# Copy the app-specific package.json and lock files for dependency resolution
+COPY apps/admin-app/package.json apps/admin-app/package-lock.json ./apps/admin-app/
+
 COPY turbo.json ./
 COPY tsconfig.json ./
+COPY packages ./packages
 COPY . .
 
 # Install PNPM

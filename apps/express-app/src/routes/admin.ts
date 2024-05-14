@@ -3,14 +3,15 @@ import * as bcryptjs from "bcryptjs";
 import { LoginInput, SignupInput } from "common";
 import { PrismaClient } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
-import fetchUser from "./../../middleware/user";
+
+import fetchAdmin from "../../middleware/admin";
 import cookieParser from "cookie-parser";
 
-interface User {
-  userId: number;
+interface Admin {
+  adminId: number;
 }
 interface CustomRequest extends Request {
-  user?: User;
+  admin?: Admin;
 }
 
 const prisma = new PrismaClient();
@@ -18,29 +19,31 @@ const router = express.Router();
 router.use(cookieParser());
 
 router.get("/", (req, res) => {
-  res.send("Signup or Login as User");
+  res.send("Signup or Login as admin");
 });
 
-router.get("/me", fetchUser, async (req: CustomRequest, res: Response) => {
-  const user = req.session.user;
-  if (!user) {
+router.get("/me", fetchAdmin, async (req: CustomRequest, res: Response) => {
+  const admin = req.session.admin;
+  if (!admin) {
     res.status(403).json({ message: "Error occured" });
   } else {
-    const data = await prisma.user.findUnique({
-      where: { id: user.userId },
+    const data = await prisma.admin.findUnique({
+      where: { id: admin.adminId },
       select: {
         name: true,
         email: true,
-        purchasedCourses: true,
+        course: true,
         isVerified: false,
         password: false,
       },
     });
-    const userData = {
+    const adminData = {
       ...data,
-      purchasedCourses: data?.purchasedCourses.length,
+      courses: data?.course.length,
+      publishedCourses: data?.course.filter((c) => c.published).length,
     };
-    res.json({ userData });
+    delete adminData.course;
+    res.json({ adminData });
   }
 });
 
@@ -49,31 +52,31 @@ router.post("/signup", async (req, res) => {
   if (!parsedInput.success) {
     res.status(403).json({ message: "Error occured" });
   } else {
-    let userData = parsedInput.data;
+    let adminData = parsedInput.data;
 
     try {
-      const exitinguser = await prisma.user.findUnique({
+      const exitingAdmin = await prisma.admin.findUnique({
         where: {
-          email: userData.email,
+          email: adminData.email,
         },
       });
-      if (exitinguser) {
-        console.log(exitinguser);
-        res.status(403).json({ message: "user already exits" });
+      if (exitingAdmin) {
+        console.log(exitingAdmin);
+        res.status(403).json({ message: "Admin already exits" });
       }
       const salt = await bcryptjs.genSalt(10);
-      const secPassword = await bcryptjs.hash(userData.password, salt);
-      const createduser = await prisma.user.create({
+      const secPassword = await bcryptjs.hash(adminData.password, salt);
+      const createdAdmin = await prisma.admin.create({
         data: {
-          name: userData.username,
-          email: userData.email,
+          name: adminData.username,
+          email: adminData.email,
           password: secPassword,
         },
       });
       const secretKey = process.env.SECRET_KEY;
       const payload = {
-        user: {
-          userId: createduser.id,
+        admin: {
+          adminId: createdAdmin.id,
         },
       };
 
@@ -81,14 +84,14 @@ router.post("/signup", async (req, res) => {
         console.error("SECRET_KEY is not defined.");
         res.status(500).json({ message: "Internal server error" });
       } else {
-        const userToken = jwt.sign(payload, secretKey, { expiresIn: "24h" });
-        // Create separate cookie for the userToken with SameSite=Strict
-        res.cookie("userToken", userToken, {
+        const token = jwt.sign(payload, secretKey, { expiresIn: "24h" });
+        // Create separate cookie for the token with SameSite=Strict
+        res.cookie("token", token, {
           httpOnly: true, // Prevent client-side JavaScript access
           secure: true, // Only send the cookie over HTTPS
           sameSite: "strict",
         });
-        res.json({ message: "Successfully SignedUp as user", userToken });
+        res.json({ message: "Successfully SignedUp as Admin", token });
       }
     } catch (error) {
       console.error(error);
@@ -102,25 +105,25 @@ router.post("/login", async (req, res) => {
   if (!parsedInput.success) {
     res.status(403).json({ message: "Error occured" });
   } else {
-    let userData = parsedInput.data;
+    let adminData = parsedInput.data;
 
     try {
-      const exitinguser = await prisma.user.findUnique({
+      const exitingAdmin = await prisma.admin.findUnique({
         where: {
-          email: userData.email,
+          email: adminData.email,
         },
       });
-      if (!exitinguser) {
+      if (!exitingAdmin) {
         return res.status(400).send("Login with correct email");
       } else if (
-        !(await bcryptjs.compare(userData.password, exitinguser.password))
+        !(await bcryptjs.compare(adminData.password, exitingAdmin.password))
       ) {
         return res.status(400).send("Login with correct password");
       }
       const secretKey = process.env.SECRET_KEY;
       const payload = {
-        user: {
-          userId: exitinguser.id,
+        admin: {
+          adminId: exitingAdmin.id,
         },
       };
 
@@ -128,18 +131,19 @@ router.post("/login", async (req, res) => {
         console.error("SECRET_KEY is not defined.");
         res.status(500).json({ message: "Internal server error" });
       } else {
-        const userToken = jwt.sign(payload, secretKey, { expiresIn: "24h" });
-        // Create separate cookie for the userToken with SameSite=Strict
-        res.cookie("userToken", userToken, {
+        const token = jwt.sign(payload, secretKey, { expiresIn: "24h" });
+
+        // Create separate cookie for the token with SameSite=Strict
+        res.cookie("token", token, {
           httpOnly: true, // Prevent client-side JavaScript access
           secure: true, // Only send the cookie over HTTPS
           sameSite: "strict",
         });
-        res.json({ message: "Successfully LoggedIn as user", userToken });
+
+        res.json({ message: "Successfully LoggedIn as Admin", token });
       }
     } catch (error) {
       console.error(error);
-      1;
       res.status(500).json({ message: "Internal server error" });
     }
   }
@@ -152,7 +156,7 @@ router.post("/logout", (req, res) => {
         console.error("Error destroying session:", err);
         res.status(500).send("Error");
       } else {
-        res.clearCookie("userToken"); // Clear the userToken cookie
+        res.clearCookie("token"); // Clear the token cookie
         res.sendStatus(200); // Send success response
       }
     });

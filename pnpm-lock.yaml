@@ -63,9 +63,6 @@ importers:
       '@next/eslint-plugin-next':
         specifier: ^14.0.4
         version: 14.1.0
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
       '@repo/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/tailwind-config
@@ -212,9 +209,6 @@ importers:
       '@next/eslint-plugin-next':
         specifier: ^14.0.4
         version: 14.1.3
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
       '@repo/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/tailwind-config

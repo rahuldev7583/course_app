@@ -36,5 +36,6 @@
     "@repo/tailwind-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/js-cookie": "^3.0.6"
-  }
+  },
+  "packageManager": "pnpm@8.9.0"
 }

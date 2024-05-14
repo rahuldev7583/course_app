@@ -1,6 +1,6 @@
 import { CourseInput } from "common";
 import { PrismaClient } from "@prisma/client";
-import fetchAdmin from "./../../middleware/admin";
+import fetchAdmin from "../../middleware/admin";
 import express, { Request, Response } from "express";
 
 const router = express.Router();

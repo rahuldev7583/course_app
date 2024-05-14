@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import fetchUser from "./../../middleware/user";
+import fetchUser from "../../middleware/user";
 import express, { Request, Response } from "express";
 
 const router = express.Router();
