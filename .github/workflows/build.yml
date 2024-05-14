@@ -19,8 +19,11 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install PNPM
-        run: npm install -g pnpm
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install PNPM 8.9.0
+        run: corepack prepare pnpm@8.9.0 --activate
 
       - name: Install dependencies
         run: pnpm install
