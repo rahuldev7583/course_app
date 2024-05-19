@@ -24,7 +24,9 @@ jobs:
           context: .
           file: apps/express-app/Dockerfile
           push: true
-          tags: rahuldev7583/course-backend:latest # Replace with your Docker Hub username and repository
+          tags: rahuldev7583/course-backend:latest
+          build-args: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
 
       - name: Verify Pushed Image
-        run: docker pull rahuldev7583/course-backend:latest # Replace with your Docker Hub username and repository
+        run: docker pull rahuldev7583/course-backend:latest
