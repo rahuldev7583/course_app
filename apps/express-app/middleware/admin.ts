@@ -14,11 +14,12 @@ interface CustomRequest extends Request {
 }
 
 const fetchAdmin = (req: CustomRequest, res: Response, next: NextFunction) => {
+  console.log("Cookies received:", req.cookies);
   const token = req.cookies.token;
-
+  console.log("Token extracted:", token);
   if (!token) {
     console.log("error from middleware");
-    console.log(token);
+    console.log(req.cookies);
     res.status(401).send({ error: "Authentication failed" });
   } else {
     try {
