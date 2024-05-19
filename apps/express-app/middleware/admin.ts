@@ -18,6 +18,7 @@ const fetchAdmin = (req: CustomRequest, res: Response, next: NextFunction) => {
 
   if (!token) {
     console.log("error from middleware");
+    console.log(token);
     res.status(401).send({ error: "Authentication failed" });
   } else {
     try {

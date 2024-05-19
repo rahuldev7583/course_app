@@ -6,6 +6,7 @@ import userCourseRoutes from "./routes/userCourse";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import session from "express-session";
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,10 +20,15 @@ declare module "express-session" {
     user: { userId: number };
   }
 }
+if (!sessionSecret) {
+  throw new Error(
+    "SESSION_SECRET is not defined. Please set it in your .env file."
+  );
+}
 
 app.use(
   session({
-    secret: sessionSecret ? sessionSecret : "", // Replace with a secure random string
+    secret: sessionSecret, // Replace with a secure random string
     resave: true, // Don't save session if unmodified
     saveUninitialized: true, // Create session when data is stored
     cookie: { secure: true, httpOnly: true, sameSite: "strict" }, // Set secure and httpOnly flags for enhanced security
