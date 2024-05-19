@@ -6,8 +6,8 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "prisma:generate": "cd apps/express-app && npx prisma generate && cd ../..",
-    "prisma:migrate": "cd apps/express-app && npx prisma migrate deploy && cd ../..",
+    "prisma:generate": "cd ./apps/express-app && npx prisma generate && cd ../..",
+    "prisma:migrate": "cd ./apps/express-app && npx prisma migrate deploy && cd ../..",
     "start-user-app": "cd ./apps/user-app && pnpm run start",
     "start-admin-app": "cd ./apps/admin-app && pnpm run start",
     "start-express-app": "cd ./apps/express-app && pnpm run start"
@@ -17,7 +17,7 @@
     "@repo/typescript-config": "workspace:*",
     "prettier": "^3.1.1",
     "prettier-plugin-tailwindcss": "^0.5.10",
-    "turbo": "latest"
+    "turbo": "^1.12.2"
   },
   "packageManager": "pnpm@8.9.0",
   "engines": {
