@@ -38,12 +38,12 @@ export default function LoginAdmin() {
         } else {
           console.log("Unexpected response status:", response.status);
           setLoginStatus(false);
-          router.push("/login");
+          router.replace("/login");
         }
       } catch (error) {
         console.error("Error occurred:", error);
         setLoginStatus(false);
-        router.push("/login");
+        router.replace("/login");
       }
     } else {
       console.error("Validation errors:");
