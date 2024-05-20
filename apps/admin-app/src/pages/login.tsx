@@ -33,7 +33,9 @@ export default function LoginAdmin() {
           setLoginStatus(true);
           const data = response.data;
           // console.log("Form is valid:", loginState);
-          Cookies.set("token", data.token);
+          console.log(data);
+
+          Cookies.set("token", data.token, { sameSite: "lax" });
           router.push("admin");
         } else {
           console.log("Unexpected response status:", response.status);

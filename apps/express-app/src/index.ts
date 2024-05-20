@@ -31,7 +31,7 @@ app.use(
     secret: sessionSecret, // Replace with a secure random string
     resave: true, // Don't save session if unmodified
     saveUninitialized: true, // Create session when data is stored
-    cookie: { secure: true, httpOnly: true, sameSite: "strict" }, // Set secure and httpOnly flags for enhanced security
+    cookie: { secure: true, httpOnly: true, sameSite: "lax" }, // Set secure and httpOnly flags for enhanced security
   })
 );
 app.use(
