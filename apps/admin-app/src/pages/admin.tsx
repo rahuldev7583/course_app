@@ -8,6 +8,7 @@ import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import { Head } from "@repo/ui/header";
 import FetchCourses from "../component/fetchCourse";
 import CourseForm from "./../component/course";
+import { loadingAtom } from "store";
 
 interface AdminInfo {
   name: string;
@@ -23,9 +24,10 @@ export default function AdminHome() {
   const menu = useRecoilValue(menuAtom);
   const setMenu = useSetRecoilState(menuAtom);
   const [courseStatus, setCourseStatus] = useRecoilState(courseStatusAtom);
-  const [loading, setLoading] = useState(true);
+  const setLoading = useSetRecoilState(loadingAtom);
 
   const getAdminProfile = async () => {
+    setLoading(true);
     try {
       const response = await axios.get("/api/me", {
         withCredentials: true,
@@ -35,12 +37,15 @@ export default function AdminHome() {
       setAdminInfo(adminData);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching admin profile:", error);
     }
   };
 
   const addCourseClick = () => {
+    setLoading(true);
     setCourseStatus({ ...courseStatus, showForm: true, showCourse: false });
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -49,34 +54,28 @@ export default function AdminHome() {
 
   return (
     <div className="">
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          <Menu
-            type="admin"
-            menuStatus={menu}
-            menuClicked={() => setMenu(true)}
-            closeClicked={() => setMenu(false)}
-            logout={logout(router, "login")}
-            profile={adminInfo}
-          />
+      <Menu
+        type="admin"
+        menuStatus={menu}
+        menuClicked={() => setMenu(true)}
+        closeClicked={() => setMenu(false)}
+        logout={logout(router, "login")}
+        profile={adminInfo}
+      />
 
-          <Head />
-          {!courseStatus.showForm && (
-            <button
-              className="text-2xl font-bold ml-[25%] mt-4 text-[#eaebf7] bg-[#363960] px-4 py-2 rounded-xl md:ml-[48%] hover:bg-gray-200 hover:text-[#363960]"
-              onClick={addCourseClick}
-            >
-              Add Course
-            </button>
-          )}
-
-          {courseStatus.showCourse && <FetchCourses />}
-
-          {courseStatus.showForm && <CourseForm />}
-        </>
+      <Head />
+      {!courseStatus.showForm && (
+        <button
+          className="text-2xl font-bold ml-[25%] mt-4 text-[#eaebf7] bg-[#363960] px-4 py-2 rounded-xl md:ml-[48%] hover:bg-gray-200 hover:text-[#363960]"
+          onClick={addCourseClick}
+        >
+          Add Course
+        </button>
       )}
+
+      {courseStatus.showCourse && <FetchCourses />}
+
+      {courseStatus.showForm && <CourseForm />}
     </div>
   );
 }

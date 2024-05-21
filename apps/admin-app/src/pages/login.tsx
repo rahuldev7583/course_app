@@ -5,11 +5,13 @@ import { LoginInput } from "common";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import { loadingAtom } from "store";
+import { useEffect } from "react";
 
 export default function LoginAdmin() {
   const router = useRouter();
   const API_URL = process.env.API_URL;
-
+  const setLoading = useSetRecoilState(loadingAtom);
   const loginState = useRecoilValue(loginStateAtom);
   const setLoginState = useSetRecoilState(loginStateAtom);
   const loginStatus = useRecoilValue(loginStatusAtom);
@@ -24,6 +26,7 @@ export default function LoginAdmin() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     const validation = LoginInput.safeParse(loginState);
     if (validation.success) {
@@ -43,19 +46,25 @@ export default function LoginAdmin() {
           });
           router.push("admin");
         } else {
+          setLoading(false);
           console.log("Unexpected response status:", response.status);
           setLoginStatus(false);
           router.replace("/login");
         }
       } catch (error) {
+        setLoading(false);
         console.error("Error occurred:", error);
         setLoginStatus(false);
         router.replace("/login");
       }
     } else {
+      setLoading(false);
       console.error("Validation errors:");
     }
   };
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   return (
     <div>

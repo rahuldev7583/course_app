@@ -2,6 +2,7 @@ import { CourseInput } from "common";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { courseInputAtom, coursesAtom, courseStatusAtom } from "store";
 import axios from "axios";
+import { loadingAtom } from "store";
 
 interface ExtendedCourseInput extends CourseInput {
   id: number;
@@ -13,6 +14,7 @@ export default function CourseForm() {
   const setCourseInput = useSetRecoilState(courseInputAtom);
   const setCourseStatus = useSetRecoilState(courseStatusAtom);
   const courseStatus = useRecoilValue(courseStatusAtom);
+  const setLoading = useSetRecoilState(loadingAtom);
 
   const handleCourseChange = (e: any) => {
     const { name, value, type, checked } = e.target;
@@ -30,6 +32,7 @@ export default function CourseForm() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     const validation = CourseInput.safeParse(courseInput);
     if (validation.success) {
@@ -46,15 +49,19 @@ export default function CourseForm() {
           published: false,
           imageLink: "",
         });
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.error("Error creating course:", error);
       }
     } else {
+      setLoading(false);
       console.error("Validation errors:");
     }
   };
 
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     updateCourseClick(courseStatus.courseToUpdate, courseInput);
   };
@@ -84,7 +91,9 @@ export default function CourseForm() {
         showCourse: true,
         courseToUpdate: 0,
       });
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error updating course:", error);
     }
   };

@@ -4,6 +4,7 @@ import { adminProfileAtom, coursesAtom, courseStatusAtom } from "store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import CourseForm from "./course";
 import { CourseInput } from "common";
+import { loadingAtom } from "store";
 
 interface ExtendedCourseInput extends CourseInput {
   id: number;
@@ -15,8 +16,10 @@ export default function FetchCourses() {
   const [courseStatus, setCourseStatus] = useRecoilState(courseStatusAtom);
   const setAdminInfo = useSetRecoilState(adminProfileAtom);
   const adminInfo = useRecoilValue(adminProfileAtom);
+  const setLoading = useSetRecoilState(loadingAtom);
 
   const fetchCourses = async () => {
+    setLoading(true);
     try {
       const response = await axios.get("/api/course");
       const data = response.data;
@@ -34,6 +37,7 @@ export default function FetchCourses() {
         };
         setAdminInfo(updatedAdminInfo);
         setCourseStatus({ ...courseStatus });
+        setLoading(false);
       } else {
         setCourse(data.courses);
         const updatedCourses = data.courses;
@@ -47,13 +51,16 @@ export default function FetchCourses() {
         };
         setAdminInfo(updatedAdminInfo);
         setCourseStatus({ ...courseStatus });
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching courses:", error);
     }
   };
 
   const publishedCourseClick = async (courseId: number, published: boolean) => {
+    setLoading(true);
     try {
       const courseToUpdate = courses.find((c) => c.id === courseId);
       if (!courseToUpdate) {
@@ -71,12 +78,15 @@ export default function FetchCourses() {
         showCourse: true,
         publishCourse: false,
       });
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error updating course:", error);
     }
   };
 
   const deleteCourseClick = async (courseId: number) => {
+    setLoading(false);
     try {
       const response = await axios.delete(`/api/course/${courseId}`);
       const data = response.data;
@@ -90,8 +100,11 @@ export default function FetchCourses() {
         publishedCourses: updatedPublishedCourses.length,
       };
       setAdminInfo(updatedAdminInfo);
+
       setCourseStatus({ ...courseStatus, showCourse: true });
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error deleting course:", error);
     }
   };
