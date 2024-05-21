@@ -3,6 +3,8 @@ import code from "./../../public/coding.png";
 import { Landing } from "@repo/ui/home";
 import { Inter } from "next/font/google";
 import { useRouter } from "next/router";
+import { useSetRecoilState } from "recoil";
+import { loadingAtom } from "store";
 
 const inter = Inter({ subsets: ["latin"] });
 const content = {
@@ -15,6 +17,8 @@ const content = {
 
 export default function Home() {
   const router = useRouter();
+  const setLoading = useSetRecoilState(loadingAtom);
+
   return (
     <main className={`  `}>
       <div className="sm:w-[90%] md:w-[65%] mt-6 ml-6 md:ml-0 md:mt-0">
@@ -26,7 +30,10 @@ export default function Home() {
         titleTwo={content.titleTwo}
         para={content.para}
         paraTwo={content.paraTwo}
-        getStart={() => router.push("signup")}
+        getStart={() => {
+          setLoading(true);
+          router.push("signup");
+        }}
       />
     </main>
   );

@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Course from "../component/course";
+import { loadingAtom } from "store";
 
 interface UserInfo {
   name: string;
@@ -19,9 +20,10 @@ export default function User() {
   const router = useRouter();
   const [menu, setMenu] = useRecoilState(menuAtom);
   const [userInfo, setUserInfo] = useRecoilState(userProfileAtom);
-  const [loading, setLoading] = useState(true);
+  const setLoading = useSetRecoilState(loadingAtom);
 
   const getUserProfile = async () => {
+    setLoading(true);
     try {
       const response = await axios.get("/api/me", {
         withCredentials: true,
@@ -31,6 +33,7 @@ export default function User() {
       setUserInfo(userData);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching user profile:", error);
     }
   };
@@ -42,21 +45,16 @@ export default function User() {
   return (
     <div>
       <Head />
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          <Menu
-            type="user"
-            menuStatus={menu}
-            menuClicked={() => setMenu(true)}
-            closeClicked={() => setMenu(false)}
-            logout={logout(router, "login")}
-            profile={userInfo}
-          />
-          <Course />
-        </>
-      )}
+
+      <Menu
+        type="user"
+        menuStatus={menu}
+        menuClicked={() => setMenu(true)}
+        closeClicked={() => setMenu(false)}
+        logout={logout(router, "login")}
+        profile={userInfo}
+      />
+      <Course />
     </div>
   );
 }

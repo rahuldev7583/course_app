@@ -5,6 +5,8 @@ import { SignupInput } from "common";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import { useEffect } from "react";
+import { loadingAtom } from "store";
 
 export default function SignupUser() {
   const router = useRouter();
@@ -12,8 +14,12 @@ export default function SignupUser() {
 
   const signupState = useRecoilValue(signupStateAtom);
   const setSignupState = useSetRecoilState(signupStateAtom);
+  const setLoading = useSetRecoilState(loadingAtom);
 
-  const loginLoad = () => router.push("login");
+  const loginLoad = () => {
+    setLoading(true);
+    router.push("login");
+  };
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -24,6 +30,7 @@ export default function SignupUser() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     const validation = SignupInput.safeParse(signupState);
 
@@ -34,9 +41,14 @@ export default function SignupUser() {
       Cookies.set("userToken", data.userToken);
       router.push("user");
     } else {
+      setLoading(false);
       console.error("Validation errors:");
     }
   };
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   return (
     <div>
