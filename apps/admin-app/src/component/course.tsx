@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { CourseInput } from "common";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { courseInputAtom, coursesAtom, courseStatusAtom } from "store";
@@ -9,7 +8,6 @@ interface ExtendedCourseInput extends CourseInput {
 }
 
 export default function CourseForm() {
-  const API_URL = process.env.API_URL;
   const course: ExtendedCourseInput[] = useRecoilValue(coursesAtom);
   const courseInput = useRecoilValue(courseInputAtom);
   const setCourseInput = useSetRecoilState(courseInputAtom);
@@ -30,22 +28,27 @@ export default function CourseForm() {
       [name]: parsedValue,
     });
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const validation = CourseInput.safeParse(courseInput);
     if (validation.success) {
-      const response = await axios.post(`${API_URL}/course`, courseInput, {
-        withCredentials: true,
-      });
-      const data = response.data;
-      setCourseStatus({ ...courseStatus, showCourse: true, showForm: false });
-      setCourseInput({
-        title: "",
-        description: "",
-        price: 0,
-        published: false,
-        imageLink: "",
-      });
+      try {
+        const response = await axios.post("/api/course", courseInput, {
+          withCredentials: true,
+        });
+        const data = response.data;
+        setCourseStatus({ ...courseStatus, showCourse: true, showForm: false });
+        setCourseInput({
+          title: "",
+          description: "",
+          price: 0,
+          published: false,
+          imageLink: "",
+        });
+      } catch (error) {
+        console.error("Error creating course:", error);
+      }
     } else {
       console.error("Validation errors:");
     }
@@ -55,6 +58,7 @@ export default function CourseForm() {
     e.preventDefault();
     updateCourseClick(courseStatus.courseToUpdate, courseInput);
   };
+
   const updateCourseClick = async (
     courseId: number,
     updatedCourse: CourseInput
@@ -65,11 +69,12 @@ export default function CourseForm() {
         console.error(`Course with ID ${courseId} not found.`);
         return;
       }
-      const updatePayload = updatedCourse;
       const response = await axios.put(
-        `${API_URL}/course/${courseId}`,
-        updatePayload,
-        { withCredentials: true }
+        `/api/course/${courseId}`,
+        updatedCourse,
+        {
+          withCredentials: true,
+        }
       );
       const data = response.data;
       setCourseStatus({
@@ -83,6 +88,7 @@ export default function CourseForm() {
       console.error("Error updating course:", error);
     }
   };
+
   return (
     <div>
       <form
@@ -123,7 +129,7 @@ export default function CourseForm() {
         </label>
         <br />
         <input
-          className="border border-slate-800 my-2 px-2 rounded-md w-[90%] "
+          className="border border-slate-800 my-2 px-2 rounded-md w-[90%]"
           onChange={handleCourseChange}
           type="number"
           name="price"
@@ -137,7 +143,7 @@ export default function CourseForm() {
         </label>
         <br />
         <input
-          className="border border-slate-800 my-2 px-2 rounded-md w-[90%] "
+          className="border border-slate-800 my-2 px-2 rounded-md w-[90%]"
           onChange={handleCourseChange}
           type="text"
           name="imageLink"
@@ -157,7 +163,7 @@ export default function CourseForm() {
         <br />
         <button
           type="submit"
-          className="  pt-2 pb-2 pl-4 pr-4  bg-[#363960] text-gray-100 ml-16 mt-6 px-6 md:px-6 py-2 md:py-3 text-xl md:text-2xl font-medium rounded-2xl md:mt-20 md:ml-56 hover:bg-gray-300  hover:text-[#363960]"
+          className="pt-2 pb-2 pl-4 pr-4 bg-[#363960] text-gray-100 ml-16 mt-6 px-6 md:px-6 py-2 md:py-3 text-xl md:text-2xl font-medium rounded-2xl md:mt-20 md:ml-56 hover:bg-gray-300 hover:text-[#363960]"
         >
           submit
         </button>

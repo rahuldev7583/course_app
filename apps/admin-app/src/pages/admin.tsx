@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import logout from "./../component/logout";
 import { Menu } from "@repo/ui/menu";
-import Cookies from "js-cookie";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { adminProfileAtom, courseStatusAtom, menuAtom } from "store";
@@ -18,7 +17,6 @@ interface AdminInfo {
 }
 
 export default function AdminHome() {
-  const API_URL = process.env.API_URL;
   const router = useRouter();
   const adminInfo = useRecoilValue(adminProfileAtom);
   const setAdminInfo = useSetRecoilState(adminProfileAtom);
@@ -29,7 +27,7 @@ export default function AdminHome() {
 
   const getAdminProfile = async () => {
     try {
-      const response = await axios.get(`${API_URL}/me`, {
+      const response = await axios.get("/api/me", {
         withCredentials: true,
       });
       const data = response.data;
@@ -37,13 +35,14 @@ export default function AdminHome() {
       setAdminInfo(adminData);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      console.error("Error fetching admin profile:", error);
     }
   };
 
   const addCourseClick = () => {
     setCourseStatus({ ...courseStatus, showForm: true, showCourse: false });
   };
+
   useEffect(() => {
     getAdminProfile();
   }, []);
