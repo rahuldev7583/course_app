@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import axios from "axios";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -21,7 +20,6 @@ interface UserInfo {
 }
 
 export default function Course() {
-  const API_URL = process.env.API_URL;
   const courses: ExtendedCourseInput[] = useRecoilValue(coursesAtom);
   const setCourse = useSetRecoilState(coursesAtom);
   const [userInfo, setUserInfo] = useRecoilState(userProfileAtom);
@@ -32,10 +30,10 @@ export default function Course() {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get(`${API_URL}/courses`, {
+      const response = await axios.get("/api/course", {
         withCredentials: true,
       });
-      const purchaseCourseRes = await axios.get(`${API_URL}/purchasedcourses`, {
+      const purchaseCourseRes = await axios.get("/api/purchasedcourse", {
         withCredentials: true,
       });
       const data = response.data;
@@ -51,21 +49,20 @@ export default function Course() {
   const purchaseCourseClick = async (courseId: number) => {
     setLoading(true);
     try {
-      const response = await axios.post(`${API_URL}/course/${courseId}`, null, {
+      const response = await axios.post(`/api/course/${courseId}`, null, {
         withCredentials: true,
       });
       const data = response.data;
       const userData = data.userData;
       const updatedPurchaseCourse = userData.purchasedCourses;
-      // Update Recoil state immutably
       setUserInfo({
         ...userData,
         purchasedCourses: userData.purchasedCourses.length,
       });
-      setPurchaseCourse(updatedPurchaseCourse); // Update purchasedCourseAtom
+      setPurchaseCourse(updatedPurchaseCourse);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      console.error("Error purchasing course:", error);
     }
   };
 

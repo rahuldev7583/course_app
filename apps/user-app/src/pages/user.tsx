@@ -23,7 +23,7 @@ export default function User() {
 
   const getUserProfile = async () => {
     try {
-      const response = await axios.get(`${API_URL}/me`, {
+      const response = await axios.get("/api/me", {
         withCredentials: true,
       });
       const data = response.data;
@@ -31,7 +31,7 @@ export default function User() {
       setUserInfo(userData);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      console.error("Error fetching user profile:", error);
     }
   };
 
