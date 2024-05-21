@@ -28,14 +28,19 @@ export default function LoginAdmin() {
     const validation = LoginInput.safeParse(loginState);
     if (validation.success) {
       try {
-        const response = await axios.post(`${API_URL}/login`, loginState);
+        const response = await axios.post(`${API_URL}/login`, loginState, {
+          withCredentials: true,
+        });
         if (response.status === 200) {
           setLoginStatus(true);
           const data = response.data;
           // console.log("Form is valid:", loginState);
           console.log(data);
 
-          Cookies.set("token", data.token, { sameSite: "lax" });
+          Cookies.set("token", data.token, {
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+          });
           router.push("admin");
         } else {
           console.log("Unexpected response status:", response.status);
