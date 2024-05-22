@@ -9,9 +9,13 @@ import {
 } from "store";
 import { CourseInput } from "common";
 import { useEffect, useState } from "react";
+import Loading from "./loading";
 
 interface ExtendedCourseInput extends CourseInput {
   id: number;
+  admin: {
+    name: string;
+  };
 }
 interface UserInfo {
   name: string;
@@ -73,7 +77,7 @@ export default function Course() {
   return (
     <div className="mt-8 md:mt-10 ml-12 pb-16 text-[#363960] md:grid md:grid-cols-4 md:w-[90%] z-0 relative">
       {loading ? (
-        <p>Loading...</p>
+        <Loading />
       ) : (
         courses.map((courseItem) => {
           return (
@@ -85,6 +89,9 @@ export default function Course() {
                 className=" w-[100%] rounded-xl md:w-[90%] md:ml-3 "
                 src={courseItem.imageLink}
               />
+              <h1 className="text-xl font-bold ml-4 mt-2 md:ml-4">
+                Tutor {courseItem.admin.name}
+              </h1>
               <h1 className="text-xl font-bold ml-4 mt-2 md:ml-4">
                 {courseItem.title}
               </h1>

@@ -23,6 +23,13 @@ router.get("/courses", fetchUser, async (req: CustomRequest, res: Response) => {
         where: {
           published: true,
         },
+        include: {
+          admin: {
+            select: {
+              name: true,
+            },
+          },
+        },
       });
 
       res.json({ courses });
