@@ -9,7 +9,7 @@ import { loadingAtom } from "store";
 const inter = Inter({ subsets: ["latin"] });
 const content = {
   titleOne: " Welcome to CodeCraft Admin!",
-  titleTwo: "Teach Web Development with Ease!",
+  titleTwo: "Teach Web Development with Us!",
   para: "Welcome to CodeCraft Admin, where your creativity meets our cutting-edge platform to shape the future of web development education",
   paraTwo:
     "At CodeCraft Admin, we empower you to bring your vision to life. From structuring course content to designing engaging learning materials, our platform provides you with the flexibility and freedom to craft courses that reflect your expertise and passion for web development.",
