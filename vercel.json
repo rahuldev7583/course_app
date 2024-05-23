@@ -1,0 +1,11 @@
+{
+  "builds": [
+    {
+      "src": "apps/admin-app/package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "installCommand": "corepack enable && corepack prepare pnpm@8.9.0 --activate && pnpm install",
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "apps/admin-app/build"
+}
