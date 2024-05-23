@@ -1,4 +1,4 @@
-name: Build and Deploy to DockerHub
+name: Build and Deploy to EC2 via DockerHub and Vercel
 
 on:
   push:
@@ -6,11 +6,11 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
@@ -41,4 +41,29 @@ jobs:
             sudo docker pull rahuldev7583/course-backend:latest
             sudo docker stop course-backend || true
             sudo docker rm course-backend || true
-            sudo docker run -d --name course-backend -p 5000:5000 -e SECRET_KEY=${{ secrets.SECRET_KEY }} -e SECRET=${{ secrets.SECRET }} -e SESSION_SECRET=${{ secrets.SESSION_SECRET }} -e DATABASE_URL=${{secrets.DATABASE_URL}} rahuldev7583/course-backend:latest
+            sudo docker run -d --name course-backend -p 5000:5000 -e SECRET_KEY=${{ secrets.SECRET_KEY }} -e SECRET=${{ secrets.SECRET }} -e SESSION_SECRET=${{ secrets.SESSION_SECRET }} -e DATABASE_URL=${{ secrets.DATABASE_URL }} rahuldev7583/course-backend:latest
+
+      - name: Deploy to Vercel
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install PNPM 8.9.0
+        run: corepack prepare pnpm@8.9.0 --activate
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Project
+        run: pnpm run build
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: vercel --prod --token $VERCEL_TOKEN --cwd apps/admin-app
