@@ -8,16 +8,20 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # Step 1: Check Out Repo
       - name: Check Out Repo
         uses: actions/checkout@v3
 
+      # Step 2: Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # Step 3: Build and Push Docker image
       - name: Build and Push Docker image
         uses: docker/build-push-action@v2
         with:
@@ -28,9 +32,11 @@ jobs:
           build-args: |
             DATABASE_URL=${{ secrets.DATABASE_URL }}
 
+      # Step 4: Verify Pushed Image
       - name: Verify Pushed Image
         run: docker pull rahuldev7583/course-backend:latest
 
+      # Step 5: Deploy to EC2
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -43,27 +49,36 @@ jobs:
             sudo docker rm course-backend || true
             sudo docker run -d --name course-backend -p 5000:5000 -e SECRET_KEY=${{ secrets.SECRET_KEY }} -e SECRET=${{ secrets.SECRET }} -e SESSION_SECRET=${{ secrets.SESSION_SECRET }} -e DATABASE_URL=${{ secrets.DATABASE_URL }} rahuldev7583/course-backend:latest
 
+      # Step 6: Deploy to Vercel
       - name: Deploy to Vercel
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      - name: Enable Corepack
+      # Step 7: Enable Corepack
+      - name: Enable corepack
         run: corepack enable
 
-      - name: Install PNPM 8.9.0
+      # Step 8: Install PNPM 8.9.0
+      - name: Install pnpm
         run: corepack prepare pnpm@8.9.0 --activate
 
+      # Step 9: Install dependencies (admin-app only)
       - name: Install dependencies
         run: pnpm install
+        working-directory: apps/admin-app
 
+      # Step 10: Build Project (admin-app only)
       - name: Build Project
         run: pnpm run build
+        working-directory: apps/admin-app
 
+      # Step 11: Install Vercel CLI
       - name: Install Vercel CLI
         run: npm install -g vercel
 
+      # Step 12: Deploy to Vercel
       - name: Deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel --prod --token $VERCEL_TOKEN --cwd apps/admin-app
+        run: vercel --prod --yes --token $VERCEL_TOKEN --cwd apps/admin-app
