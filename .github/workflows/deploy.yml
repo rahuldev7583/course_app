@@ -48,37 +48,3 @@ jobs:
             sudo docker stop course-backend || true
             sudo docker rm course-backend || true
             sudo docker run -d --name course-backend -p 5000:5000 -e SECRET_KEY=${{ secrets.SECRET_KEY }} -e SECRET=${{ secrets.SECRET }} -e SESSION_SECRET=${{ secrets.SESSION_SECRET }} -e DATABASE_URL=${{ secrets.DATABASE_URL }} rahuldev7583/course-backend:latest
-
-      # Step 6: Deploy to Vercel
-      - name: Deploy to Vercel
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-
-      # Step 7: Enable Corepack
-      - name: Enalbe Corepack
-        run: corepack enable
-
-      # Step 8: Install PNPM 8.9.0
-      - name: Install PNPM 8.9.0
-        run: corepack prepare pnpm@8.9.0 --activate
-
-      # Step 9: Install dependencies (admin-app only)
-      - name: Install dependencies
-        run: pnpm install
-        working-directory: apps/admin-app
-
-      # Step 10: Build Project (admin-app only)
-      - name: Build Project
-        run: pnpm run build
-        working-directory: apps/admin-app
-
-      # Step 11: Install Vercel CLI
-      - name: Install Vercel CLI
-        run: npm install -g vercel
-
-      # Step 12: Deploy to Vercel
-      - name: Deploy to Vercel
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel --prod --yes --token $VERCEL_TOKEN --cwd apps/admin-app
