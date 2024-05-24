@@ -103,7 +103,7 @@ export default function CourseForm() {
       <form
         id="myForm"
         onSubmit={!courseStatus.updateCourse ? handleSubmit : handleUpdate}
-        className="text-[#363960] font-sans  relative mt-4 ml-16 w-[75%] md:w-[25%] text-base md:text-lg md:ml-[41%]"
+        className="text-[#363960] font-sans  relative mt-20 md:mt-20 ml-16 w-[75%] md:w-[25%] text-base md:text-lg md:ml-[41%] z-10"
       >
         <label htmlFor="title" className="">
           Title
