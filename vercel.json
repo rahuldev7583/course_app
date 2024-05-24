@@ -5,7 +5,13 @@
       "use": "@vercel/node"
     }
   ],
-  "installCommand": "corepack enable && corepack prepare pnpm@8.9.0 --activate && pnpm install",
-  "buildCommand": "pnpm run build",
-  "outputDirectory": "apps/admin-app/build"
+  "installCommand": "corepack enable && corepack prepare pnpm@8.9.0 --activate && pnpm install --filter admin-app...",
+  "buildCommand": "pnpm run build --filter admin-app",
+  "outputDirectory": "apps/admin-app/.next",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
 }
