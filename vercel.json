@@ -13,6 +13,6 @@
     }
   ],
   "installCommand": "corepack enable && corepack prepare pnpm@8.9.0 --activate && pnpm install --filter './apps/admin-app...'",
-  "buildCommand": "pnpm run build --filter=admin-app",
+  "buildCommand": "pnpm run build",
   "outputDirectory": "apps/admin-app/.next"
 }
