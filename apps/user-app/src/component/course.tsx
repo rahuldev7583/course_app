@@ -86,7 +86,7 @@ export default function Course() {
               className="mt-6 md:mt-3  w-[90%] border-4 border-[#363960]   rounded-2xl md:w-[75%] md:ml-12 pt-3 pb-5 pl-2 pr-2 md:pl-0 md:pr-0"
             >
               <img
-                className=" w-[100%] rounded-xl md:w-[90%] md:ml-3 "
+                className=" w-[100%] rounded-xl  md:w-[225px] md:h-[200px]  md:ml-3 "
                 src={courseItem.imageLink}
               />
               <h1 className="text-xl font-bold ml-4 mt-2 md:ml-4">

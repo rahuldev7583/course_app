@@ -121,7 +121,7 @@ export default function FetchCourses() {
           key={courseItem.id}
         >
           <img
-            className="w-[100%] rounded-xl md:w-[90%] md:ml-3"
+            className="w-[100%] rounded-xl md:w-[225px] md:h-[200px] md:ml-3"
             src={courseItem.imageLink}
           />
           <h1 className="text-xl font-bold ml-4 mt-2 md:ml-4">
