@@ -6,11 +6,20 @@ import userCourseRoutes from "./routes/userCourse";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import session from "express-session";
+import { profileEnd } from "console";
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const sessionSecret = process.env.SESSION_SECRET;
+const allowedApps: string[] = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  process.env.ADMIN_APP,
+  process.env.VERCEL_ADMIN_APP,
+  process.env.USER_APP,
+  process.env.VERCEL_USER_APP,
+].filter((app): app is string => app !== undefined);
 
 if (!sessionSecret) {
   throw new Error(
@@ -21,7 +30,7 @@ if (!sessionSecret) {
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: allowedApps,
     credentials: true,
   })
 );
