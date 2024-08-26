@@ -17,7 +17,7 @@ const fetchAdmin = (req: CustomRequest, res: Response, next: NextFunction) => {
   const token = req.cookies.token;
 
   if (!token) {
-    console.log("error from middleware");
+    // console.log("error from middleware");
     console.log(req.cookies);
     res.status(401).send({ error: "Authentication failed" });
   } else {
