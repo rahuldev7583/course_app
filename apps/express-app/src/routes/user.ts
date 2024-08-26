@@ -18,13 +18,13 @@ const router = express.Router();
 router.use(cookieParser());
 
 router.get("/", (req, res) => {
-  res.send("Signup or Login as User");
+  return res.send("Signup or Login as User");
 });
 
 router.get("/me", fetchUser, async (req: CustomRequest, res: Response) => {
   const user = req.session.user;
   if (!user) {
-    res.status(403).json({ message: "Error occured" });
+    return res.status(403).json({ message: "Error occured" });
   } else {
     const data = await prisma.user.findUnique({
       where: { id: user.userId },
@@ -40,14 +40,14 @@ router.get("/me", fetchUser, async (req: CustomRequest, res: Response) => {
       ...data,
       purchasedCourses: data?.purchasedCourses.length,
     };
-    res.json({ userData });
+    return res.json({ userData });
   }
 });
 
 router.post("/signup", async (req, res) => {
   let parsedInput = SignupInput.safeParse(req.body);
   if (!parsedInput.success) {
-    res.status(403).json({ message: "Error occured" });
+    return res.status(403).json({ message: "Error occured" });
   } else {
     let userData = parsedInput.data;
 
@@ -59,7 +59,7 @@ router.post("/signup", async (req, res) => {
       });
       if (exitinguser) {
         console.log(exitinguser);
-        res.status(403).json({ message: "user already exits" });
+        return res.status(403).json({ message: "user already exits" });
       }
       const salt = await bcryptjs.genSalt(10);
       const secPassword = await bcryptjs.hash(userData.password, salt);
@@ -79,7 +79,7 @@ router.post("/signup", async (req, res) => {
 
       if (!secretKey) {
         console.error("SECRET_KEY is not defined.");
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
       } else {
         const userToken = jwt.sign(payload, secretKey, { expiresIn: "24h" });
         // Create separate cookie for the userToken with SameSite=Strict
@@ -88,11 +88,14 @@ router.post("/signup", async (req, res) => {
           secure: true, // Only send the cookie over HTTPS
           sameSite: "strict",
         });
-        res.json({ message: "Successfully SignedUp as user", userToken });
+        return res.json({
+          message: "Successfully SignedUp as user",
+          userToken,
+        });
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 });
@@ -100,7 +103,7 @@ router.post("/signup", async (req, res) => {
 router.post("/login", async (req, res) => {
   let parsedInput = LoginInput.safeParse(req.body);
   if (!parsedInput.success) {
-    res.status(403).json({ message: "Error occured" });
+    return res.status(403).json({ message: "Error occured" });
   } else {
     let userData = parsedInput.data;
 
@@ -126,7 +129,7 @@ router.post("/login", async (req, res) => {
 
       if (!secretKey) {
         console.error("SECRET_KEY is not defined.");
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
       } else {
         const userToken = jwt.sign(payload, secretKey, { expiresIn: "24h" });
         // Create separate cookie for the userToken with SameSite=Strict
@@ -135,12 +138,15 @@ router.post("/login", async (req, res) => {
           secure: true, // Only send the cookie over HTTPS
           sameSite: "strict",
         });
-        res.json({ message: "Successfully LoggedIn as user", userToken });
+        return res.json({
+          message: "Successfully LoggedIn as user",
+          userToken,
+        });
       }
     } catch (error) {
       console.error(error);
       1;
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 });
@@ -150,14 +156,15 @@ router.post("/logout", (req, res) => {
     req.session.destroy((err) => {
       if (err) {
         console.error("Error destroying session:", err);
-        res.status(500).send("Error");
+        return res.status(500).send("Error");
       } else {
         res.clearCookie("userToken"); // Clear the userToken cookie
         res.sendStatus(200); // Send success response
+        return;
       }
     });
   } else {
-    res.sendStatus(200); // No session, already logged out
+    return res.sendStatus(200); // No session, already logged out
   }
 });
 

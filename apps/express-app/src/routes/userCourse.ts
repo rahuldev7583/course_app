@@ -17,7 +17,7 @@ router.get("/courses", fetchUser, async (req: CustomRequest, res: Response) => {
   try {
     if (!user) {
       console.log(user);
-      res.status(403).json({ message: "Error occured" });
+      return res.status(403).json({ message: "Error occured" });
     } else {
       const courses = await prisma.course.findMany({
         where: {
@@ -32,11 +32,11 @@ router.get("/courses", fetchUser, async (req: CustomRequest, res: Response) => {
         },
       });
 
-      res.json({ courses });
+      return res.json({ courses });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -52,7 +52,7 @@ router.post(
         },
       });
       if (!course) {
-        res.status(400).send("Course doesn't exit");
+        return res.status(400).send("Course doesn't exit");
       } else {
         const userId = req.session.user?.userId;
         const updateUser = await prisma.user.update({
@@ -77,11 +77,14 @@ router.post(
             password: false,
           },
         });
-        res.json({ message: "Course added to purchasedCourses", userData });
+        return res.json({
+          message: "Course added to purchasedCourses",
+          userData,
+        });
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 );
@@ -101,10 +104,10 @@ router.get(
         },
       });
       const purchasedCourses = user?.purchasedCourses;
-      res.json({ purchasedCourses });
+      return res.json({ purchasedCourses });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 );

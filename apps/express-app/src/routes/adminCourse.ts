@@ -19,7 +19,7 @@ router.get(
   async (req: CustomRequest, res: Response) => {
     const admin = req.session.admin;
     if (!admin) {
-      res.status(403).json({ message: "Unauthorized" });
+      return res.status(403).json({ message: "Unauthorized" });
     } else {
       try {
         const courses = await prisma.course.findMany({
@@ -27,10 +27,10 @@ router.get(
             adminId: admin.adminId,
           },
         });
-        res.json({ courses });
+        return res.json({ courses });
       } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
       }
     }
   }
@@ -42,14 +42,14 @@ router.post(
   async (req: CustomRequest, res: Response) => {
     let parsedInput = CourseInput.safeParse(req.body);
     if (!parsedInput.success) {
-      res.status(403).json({ message: "Error occured" });
+      return res.status(403).json({ message: "Error occured" });
     } else {
       const course = parsedInput.data;
       const admin = req.session.admin;
 
       try {
         if (!admin) {
-          res.status(403).json({ message: "Error occured" });
+          return res.status(403).json({ message: "Error occured" });
         } else {
           const createdCourse = await prisma.course.create({
             data: {
@@ -61,11 +61,11 @@ router.post(
               adminId: admin.adminId,
             },
           });
-          res.send("Course created");
+          return res.send("Course created");
         }
       } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
       }
     }
   }
@@ -77,7 +77,7 @@ router.put(
   async (req: CustomRequest, res: Response) => {
     let parsedInput = CourseInput.safeParse(req.body);
     if (!parsedInput.success) {
-      res.status(403).json({ message: "Error occured" });
+      return res.status(403).json({ message: "Error occured" });
     } else {
       try {
         const newCourse = parsedInput.data;
@@ -88,7 +88,7 @@ router.put(
           },
         });
         if (!course) {
-          res.status(400).send("Course doesn't exit");
+          return res.status(400).send("Course doesn't exit");
         } else {
           const updatedCourse = await prisma.course.update({
             where: {
@@ -102,11 +102,14 @@ router.put(
               published: newCourse.published,
             },
           });
-          res.json({ message: "Course updated successfully", updatedCourse });
+          return res.json({
+            message: "Course updated successfully",
+            updatedCourse,
+          });
         }
       } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
       }
     }
   }
@@ -125,7 +128,7 @@ router.put(
         },
       });
       if (!course) {
-        res.status(400).send("Course doesn't exit");
+        return res.status(400).send("Course doesn't exit");
       } else {
         const updatedCourse = await prisma.course.update({
           where: {
@@ -135,11 +138,14 @@ router.put(
             published: published,
           },
         });
-        res.json({ message: "Course updated successfully", updatedCourse });
+        return res.json({
+          message: "Course updated successfully",
+          updatedCourse,
+        });
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 );
@@ -157,18 +163,18 @@ router.delete(
       });
 
       if (!course) {
-        res.status(404).send("Course not found");
+        return res.status(404).send("Course not found");
       } else {
         await prisma.course.delete({
           where: {
             id: courseId,
           },
         });
-        res.json({ message: "Course deleted successfully" });
+        return res.json({ message: "Course deleted successfully" });
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 );
