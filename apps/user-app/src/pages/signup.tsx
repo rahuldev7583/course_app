@@ -35,14 +35,32 @@ export default function SignupUser() {
     const validation = SignupInput.safeParse(signupState);
 
     if (validation.success) {
-      const response = await axios.post(`${API_URL}/signup`, signupState);
-      const data = response.data;
-      // console.log("Form is valid:", signupState);
-      Cookies.set("userToken", data.userToken);
-      router.push("user");
+      try {
+        const response = await axios.post(`${API_URL}/signup`, signupState);
+        if (response.status === 200) {
+          const data = response.data;
+          // console.log("Form is valid:", signupState);
+          Cookies.set("userToken", data.userToken);
+          router.push("user");
+        } else {
+          setLoading(false);
+          console.error({ "Response errors": response });
+          router.replace("signup");
+        }
+      } catch (error: any) {
+        setLoading(false);
+        if (error.response && error.response.status === 403) {
+          console.error("Access forbidden:", error.response.data);
+          // Handle the 403 error (e.g., show an error message to the user)
+        } else {
+          console.error("An unexpected error occurred:", error);
+        }
+        router.replace("signup");
+      }
     } else {
       setLoading(false);
       console.error("Validation errors:");
+      router.replace("signup");
     }
   };
 
